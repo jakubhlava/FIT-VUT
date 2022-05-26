@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <title>Projekt IIS</title>
+    <style type="text/css">
+    	table { border-collapse: collapse; }
+    	td, th { border: 1px solid black; padding: 0.3em 0.5em; text-align: left; }
+    	dt { font-weight: bold; margin-top: 0.5em; }
+    </style>
+</head>
+<body>
+
+<!-- Zkontrolujte prosím nastavení kódování v hlavičce dokumentu 
+     podle použitého editoru -->
+
+<h1>Hromadná doprava: zadávání, vyhledávání spojů a rezervaci jízdenek</h1> <!-- Nahradte názvem svého zadání -->
+
+<dl>
+	<dt>Autoři</dt>
+	<dd>Jakub Hlava <!-- Nahraďte skutečným jménem a e-mailem autora a popisem činnosti -->
+	    <a href="mailto:xhlava52@stud.fit.vutbr.cz">xhlava52@stud.fit.vutbr.cz</a> -
+		vedoucí týmu, návrh a vývoj backendu, správce aplikačního serveru
+	</dd>
+	<dd>Thi Bao Ngoc Vu <!-- Nahraďte skutečným jménem a e-mailem autora a popisem činnosti -->
+	    <a href="mailto:xvuthi00@stud.fit.vutbr.cz">xvuthi00@stud.fit.vutbr.cz</a> -
+		návrh a vývoj frontendu
+	</dd>
+  <dd>Adam Gajda <!-- Nahraďte skutečným jménem a e-mailem autora a popisem činnosti -->
+	    <a href="mailto:xgajda07@stud.fit.vutbr.cz">xgajda07@stud.fit.vutbr.cz</a> -
+		návrh a vývoj frontendu i backendu
+	</dd>
+	<dt>URL aplikace</dt>
+	<dd><a href="https://iis.jakubh.cz/">https://iis.jakubh.cz/</a></dd>
+</dl>
+
+<h2>Uživatelé systému pro testování</h2>
+<table>
+<tr><th>Login</th><th>Heslo</th><th>Role</th></tr>
+<tr><td>admin</td><td>admin</td><td>Administrátor</td></tr>
+<tr><td>carrier</td><td>carrier</td><td>Dopravce</td></tr>
+<tr><td>staff</td><td>staff</td><td>Personál dopravce</td></tr>
+    <tr>
+        <td>user</td>
+        <td>user</td>
+        <td>Registrovaný zákazník</td>
+    </tr>
+</table>
+
+<h2>Implementace</h2>
+<p>Stručná dokumentace k implementaci, která popisuje, které části projektu (např. PHP skripty) implementují jednotlivé případy použití.</p>
+
+<h3>Databáze</h3>
+
+<img src="doc_img/erd.png" alt="ERD">
+
+<h2>Instalace</h2>
+
+<ul>
+    <li>SW požadavky (prerekvizity)</li>
+    <ul>
+        <li>Python 3.6+ (testováno v Pythonu 3.9+)</li>
+        <li>PostgreSQL (testováno na verzi 9.6.24)</li>
+        <li><i>Pozn. testováno pod Windows 10, Windows 11, Debian 9, Manjaro Linux</i></li>
+    </ul>
+<li>Postup instalace na server</li>
+    <ul>
+        <li>Rozbalení programu</li>
+        <li>Ve složce s rozbaleným programem spustit instalaci závislostí a balíčku: <code>pip install -e .</code></li>
+        <li>Konfigurace pomocí přejmenování <code>settings.default.conf</code> na <code>settings.conf</code> a nastavení údajů k databázi, apod. podle instrukcí v <code>settings.default.conf</code></li>
+        <li>V případě spuštění <i>development serveru</i> postačí spustit balíček: <code>python iis_app</code> <br><small><i>Pozn. příkaz pro spuštění pythonu se může ve vašem systému lišit! Např.</i> <code>python3, python3.10, ...</code></small></li>
+        <li>V případě nasazení s produkčním WSGI serverem je potřeba provést konfiguraci Vašeho serveru podle odpovídajícího manuálu a nasměrovat server na <code>iis_app.wsgi</code> soubor v podsložce <code>iis_app</code> složky s rozbaleným projektem. Příklad konfigurace aplikačního serveru níže.</li>
+    </ul>
+<li>Inicializace databáze je díky využití ORM SQLAlchemy provedena automaticky pří prvním spuštění programu.</li>
+</ul>
+
+<h3>Příklad konfigurace produkčního serveru Apache2 s modulem mod_wsgi</h3>
+Obdoba této konfigurace je použita na serveru <code>iis.jakubh.cz</code>, kde je k hodnocení zpřístupněn náš projekt.
+<br>
+<code>
+&lt;VirtualHost *:80&gt;<br>
+&emsp;        ServerName iis.jakubh.cz<br>
+&emsp;        Redirect permanent / https://iis.jakubh.cz/<br>
+&lt;/VirtualHost&gt;<br>
+&lt;VirtualHost *:443&gt;<br>
+&emsp;        ServerName iis.jakubh.cz<br>
+&emsp;        DocumentRoot /home/iis_user/www/iis/iis_app<br>
+&emsp;        SSLEngine on<br>
+&emsp;        SSLCertificateFile /etc/letsencrypt/live/jakubh.cz-0001/cert.pem<br>
+&emsp;        SSLCertificateKeyFile /etc/letsencrypt/live/jakubh.cz-0001/privkey.pem<br>
+&emsp;        SSLCertificateChainFile /etc/letsencrypt/live/jakubh.cz-0001/fullchain.pem<br>
+<br>
+&emsp;        WSGIDaemonProcess iis_app user=iis_user group=iis_user threads=4<br>
+&emsp;        WSGIScriptAlias / /home/iis_user/www/iis/iis_app/iis_app.wsgi<br>
+&emsp;        &lt;Directory /home/iis_user/www/iis/iis_app/&gt;<br>
+&emsp;&emsp;                WSGIProcessGroup iis_app<br>
+&emsp;&emsp;                WSGIApplicationGroup %{GLOBAL}<br>
+&emsp;&emsp;                Require all granted<br>
+&emsp;        &lt;/Directory&gt;<br>
+&emsp;        LogLevel warn<br>
+&lt;/VirtualHost&gt;<br>
+
+</code>
+
+<h2>Známé problémy</h2>
+Z časových důvodů jsme nestihli implementovat možnost doregistrace neregistrovaného uživatele a možnost sledovat polohu vozidla uživatelem.
+</body>
+</html>

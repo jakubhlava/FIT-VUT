@@ -1,0 +1,183 @@
+{% extends 'base.html' %}
+{% block title %}Edit Stop{% endblock %}
+
+{% block header %}
+    <script src="https://api.mapy.cz/loader.js"></script>
+    <script>Loader.load(null, {suggest:true});</script>
+    <style>
+        #map img {
+            max-width: none;
+        }
+    </style>
+{% endblock %}
+
+{% block navbar_right %}
+{% endblock %}
+
+
+{% block content %}
+
+    <h4 class="p-3">{% block sp_title %}{% endblock %}</h4>
+    <div class="bg-light p-2 m-3">
+        <div id="add_stop_form">
+
+            <form class="p-3 needs-validation" action="{% block sp_action %}{% endblock %}" method="POST" id="editformstop">
+
+                <div class="row mb-2 g-3 align-items-center">
+                    <div class="col-sm-2">
+                      <label for="edit_stop_name" class="col-form-label">Stop Name:</label>
+                    </div>
+                    <div class="col">
+                      <input type="text" id="edit_stop_name" name="name" class="form-control" value="{% if stop is defined %}{{ stop.name }}{% endif %}" required>
+                        <div class="invalid-feedback">
+                            Please fill unique name of this stop.
+                        </div>
+                    </div>
+                    <div class="col">
+                      <span class="form-text">
+                            <i>Required</i>
+                      </span>
+                    </div>
+                </div>
+
+                <div class="row mb-2 g-3 align-items-center">
+                    <div class="col-sm-2">
+                      <label for="edit_role" class="col-form-label">Type:</label>
+                    </div>
+                    <div class="col">
+                      <select name="type" id="stop_type" class="form-select" required>
+                          <option {% if stop is not defined %}selected{% endif %} disabled value="">Choose type</option>
+                          <option {% if stop is defined and stop.type == 'train' %}selected{% endif %} value="train">Train</option>
+                          <option {% if stop is defined and stop.type == 'bus' %}selected{% endif %} value="bus">Bus</option>
+                          <option {% if stop is defined and stop.type == 'tram' %}selected{% endif %} value="tram">Tram</option>
+                          <option {% if stop is defined and stop.type == 'plane' %}selected{% endif %} value="plane">Plane</option>
+                      </select>
+                    <div class="invalid-feedback">
+                        Please pick a type.
+                    </div>
+                  </div>
+                    <div class="col">
+                      <span class="form-text">
+                        <i>Required</i>
+                      </span>
+                    </div>
+
+                </div>
+
+                <div class="row mb-2 g-3 align-items-center">
+                    <div class="col-sm-2">
+                      <label for="edit_phone" class="col-form-label">Latitude:</label>
+                    </div>
+                    <div class="col">
+                      <input type="text" id="edit_lat" name="lat" class="form-control" value="{% if stop is defined %}{{ stop.lat | lattostr }}{% endif %}" required>
+                    <div class="invalid-feedback">
+                        Please fill latitude or pick a position in map.
+                    </div>
+                    </div>
+                    <div class="col">
+                      <span class="form-text">
+                            <i>Required</i>
+                      </span>
+                    </div>
+                </div>
+
+                <div class="row mb-2 g-3 align-items-center">
+                    <div class="col-sm-2">
+                      <label for="edit_email" class="col-form-label">Longitude:</label>
+                    </div>
+                    <div class="col">
+                      <input type="text" id="edit_long" name="long" class="form-control" value="{% if stop is defined %}{{ stop.long | longtostr }}{% endif %}" required>
+                    <div class="invalid-feedback">
+                        Please fill longitude or pick a position in map.
+                    </div>
+                    </div>
+                    <div class="col">
+                      <span class="form-text">
+                        <i>Required</i>
+                      </span>
+                    </div>
+                </div>
+
+                <div class="row mb-1 ms-auto w-50 justify-content-end">
+            <div>
+                <input type="text" id="mapSearch" class="form-control" placeholder="Search places here...">
+            </div>
+
+        </div>
+        <div class="row mb-2 g-3 align-items-center">
+            <div class="col justify-content-center">
+                <div id="map" style="height: 480px;"></div>
+            </div>
+        </div>
+            {% if current_user.role == "admin" %}
+                <div class="d-flex my-2 g-3 justify-content-end">
+                    <span class="mx-2"><i class="bi bi-exclamation-triangle-fill text-danger"></i> Automatically approve this request</span>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="skipRequest" name="skip">
+                    </div>
+
+                </div>
+            {% endif %}
+
+
+            </form>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end align-items-center">
+                  <a type="button" class="btn btn-outline-gray" href="{{ url_for('carrier.manage_stops_page') }}"><i class="bi bi-door-open"></i> Back to admin panel</a>
+                  <button form="editformstop" type="submit" class="btn btn-success"><i class="bi bi-check-lg"></i>{% block sp_sendbutton %}{% endblock %}</button>
+                {% block sp_cancelbutton %}{% endblock %}
+            </div>
+        </div>
+
+
+    </div>
+
+{% endblock %}
+{% block js %}
+    <script>
+    const lat_inp = $("#edit_lat");
+    const long_inp = $("#edit_long");
+        let start = SMap.Coords.fromWGS84("16.6078411E", "49.2002211N");
+
+        if (lat_inp.val() === "") {
+            lat_inp.val(start.toWGS84(0)[1]);
+            long_inp.val(start.toWGS84(0)[0]);
+        } else {
+            start = SMap.Coords.fromWGS84(long_inp.val(), lat_inp.val())
+        }
+		let map = new SMap(JAK.gel("map"), start, 12);
+		map.addDefaultLayer(SMap.DEF_BASE).enable();
+		map.addDefaultControls();
+		let mouse_control = new SMap.Control.Mouse(SMap.MOUSE_PAN | SMap.MOUSE_WHEEL | SMap.MOUSE_ZOOM);
+        map.addControl(mouse_control);
+        let marker_layer = new SMap.Layer.Marker();
+        map.addLayer(marker_layer).enable();
+        let marker = new SMap.Marker(start);
+        marker.decorate(SMap.Marker.Feature.Draggable);
+        marker_layer.addMarker(marker);
+
+        let signals = map.getSignals();
+        signals.addListener(window, "marker-drag-stop", (e) => {
+            let coords = e.target.getCoords();
+            lat_inp.val(coords.toWGS84(0)[1]);
+            long_inp.val(coords.toWGS84(0)[0]);
+        });
+        signals.addListener(window, "map-click", (e, f) => {
+            let coords = SMap.Coords.fromEvent(e.data.event, map);
+            marker.setCoords(coords);
+            lat_inp.val(coords.toWGS84(0)[1]);
+            long_inp.val(coords.toWGS84(0)[0]);
+        });
+        var inputEl = document.querySelector("#mapSearch");
+        var suggest = new SMap.Suggest(inputEl);
+        suggest.map(map);
+        suggest.addListener("suggest", (data) => {
+            let coords = new SMap.Coords(data.data.longitude, data.data.latitude)
+           marker.setCoords(coords);
+            map.setCenter(coords, true);
+           lat_inp.val(coords.toWGS84(0)[1]);
+            long_inp.val(coords.toWGS84(0)[0]);
+        });
+    </script>
+
+
+{% endblock %}

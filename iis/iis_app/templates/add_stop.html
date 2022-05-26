@@ -1,0 +1,8 @@
+{% extends 'stop_base.html' %}
+{% block title %}Request new stop{% endblock %}
+{% block sp_title %}Request new stop{% endblock %}
+{% block sp_action %}
+        {{ url_for("carrier.add_stop_page") }}
+{% endblock %}
+{% block sp_sendbutton %} Request new stop{% endblock %}
+{% block sp_cancelbutton %}{% endblock %}

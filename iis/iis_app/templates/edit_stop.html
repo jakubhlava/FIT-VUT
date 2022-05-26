@@ -1,0 +1,43 @@
+{% extends "stop_base.html" %}
+{% block title %}Edit Stop{% endblock %}
+{% block sp_title %}Edit stop{% endblock %}
+{% block sp_action %}{{ url_for("carrier.edit_stop_page", stop_id=stop.stop_id) }}{% endblock %}
+{% block sp_sendbutton %} Send for approval{% endblock %}
+{% block sp_canceltext %} Request deletion{% endblock %}
+{% block sp_cancelbutton %}
+<button type="button" class="btn btn-danger" onclick="confirmDeletion()"><i class="bi bi-x-lg"></i> Request deletion</button>
+{% endblock %}
+{% block js %}
+    {{ super() }}
+    <script>
+        function confirmDeletion() {
+            let skip = false;
+              if ($("#skipRequest").is(":checked")) {
+                  skip = true;
+              }
+              let title, text;
+              if (skip) {
+                  title = "Do you really want to delete this stop?"
+                  text = "You are deleting this stop <b>immediately</b> as an admin.<br>" +
+                         "Deleting a stop cannot be reverted!"
+              } else {
+                  title = "Are you sure?"
+                  text = "If administrator approves your deletion request, it cannot be reverted!"
+              }
+            Swal.fire({
+                  title: title,
+                  text: text,
+                  icon: "warning",
+                  showCancelButton: true,
+                  confirmButtonColor: "#dc3545",
+                  cancelButtonColor: "#0648B3",
+                  confirmButtonText: "Delete"
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                      $.redirect("{{ url_for("carrier.edit_stop_page", stop_id=stop.stop_id) }}", {"delete": "yes", "skip": skip});
+                  }
+                })
+            }
+    </script>
+
+{% endblock %}

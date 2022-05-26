@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% block title %}Reservation{% endblock %}
+
+{% block navbar_right %}
+    <ul class="navbar-nav">
+        {% include 'snippets/user.html' %}
+    </ul>
+{% endblock %}
+{% block content %}
+    <div class="container mt-5 py-2 justify-content-center shadow-lg rounded">
+        <div class="accordion" id="accordionPanelsStayOpenExample">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="panelsStayOpen-heading{{connection.connection_id}}">
+                    <button class="accordion-button" type="button" data-bs-toggle="" data-bs-target="#panelsStayOpen-collapse{{connection.connection_id}}" aria-expanded="true" aria-controls="panelsStayOpen-collapse{{connection.connection_id}}">
+                        {% for tstop in connection.stops %}
+                            {% if tstop.stop_id == frm_stop.stop_id %}
+                                <span class=""><div><span class="fs-4 pe-5">{{ tstop.departure }}</span> <span class="fst-italic">{{ dateusr }}</span></div> <span class="">Price: <span class="fw-bold">{{price(connection, frm_stop, to_stop, quantity)}},-</span> Czk</span></span>
+                            {% endif %}
+                        {% endfor %}
+                    </button>
+                </h2>
+                <div id="panelsStayOpen-collapse{{connection.connection_id}}" class="accordion-collapse collapsed show" aria-labelledby="panelsStayOpen-heading{{connection.connection_id}}">
+                    <div class="accordion-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                {% set vars = {'inside': False} %}
+                                {% for tstop in connection.stops %}
+                                    <div class="justify-content-center align-items-center">
+                                        {% if tstop.stop_id == frm_stop.stop_id %}
+                                            {% if vars.update({'inside': True}) %}{% endif %}
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-circle-half rotate270" viewBox="0 0 16 16">
+                                                <path d="M8 15A7 7 0 1 0 8 1v14zm0 1A8 8 0 1 1 8 0a8 8 0 0 1 0 16z"/>
+                                            </svg>
+                                        {% elif tstop.stop_id == to_stop.stop_id %}
+                                            {% if vars.update({'inside': False}) %}{% endif %}
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-circle-half rotate90" viewBox="0 0 16 16">
+                                                <path d="M8 15A7 7 0 1 0 8 1v14zm0 1A8 8 0 1 1 8 0a8 8 0 0 1 0 16z"/>
+                                            </svg>
+                                        {% elif vars.inside %}
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-circle-fill" viewBox="0 0 16 16">
+                                                <circle cx="8" cy="8" r="8"/>
+                                            </svg>
+                                        {% else %}
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-circle" viewBox="0 0 16 16">
+                                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                            </svg>
+                                        {% endif %}
+
+                                        <span{% if tstop.stop_id in (frm_stop.stop_id, to_stop.stop_id) %} class="fw-bold"{% endif %}>
+                                            {{ tstop.static_stop.name }} - {{tstop.departure}}</span><br>
+                                    </div>
+                                {% endfor %}
+                                <div class="justify-content-center align-items-center">
+                                    <span>Seat{% if len(seats) != 1%}s{% endif %}: {% for seat in seats %}{{seat.index}}{% if seat != seats[-1] %}, {% endif %}{% endfor %}</span><br>
+                                </div>
+                            </div>
+                            <div class="row justify-content-end align-items-end">
+                                <div class="col text-end">
+                                    <a type="button" href="{{ url_for('reservation.create_reservation', connection_id=connection.connection_id, quantity=quantity, frm_stop_id=frm_stop.stop_id, to_stop_id=to_stop.stop_id, datetime=datetime, user_id=user_id, cost=price(connection, frm_stop, to_stop, quantity), seat_ids=seat_ids) }}" id="reserve-btn" name="reserve-btn" value="reserve-btn" class="btn btn-primary px-4 py-2">Create reservation</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,143 @@
+{% extends extend_base %}
+{% block title %}Approve reject stops{% endblock %}
+
+{% block tab_content %}
+    <h4>Approve or Reject Stops</h4>
+    <div id="add_stop" class="justify-content-between">
+        <a type="button" class="btn button-primary shadow" href="{{ url_for('admin.add_stop_page') }}" id="btn-admin_add_stop">Add Stop</a>
+    </div>
+
+    <div id="manage_stops_pages" class="mt-3">
+        <div id="stops_container"class="container-fluid">
+            {% for stop in stops_list.items %}
+            <div id="stop_card" class="container-fluid bg-light mb-3 p-2 d-flex justify-content-between">
+                <div id="stop_grid" class="container">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <div class="badge
+                                {% if stop.change_type == 'create' %}bg-success">Create
+                                {% elif stop.change_type == 'change' %}bg-info">Change
+                                {% else %}bg-danger">Delete
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-row justify-content-between align-items-center">
+                        <div>
+                            Stop name: {{ stop.name }}
+                        </div>
+                        <form action="{{ url_for('admin.approve_reject_decide', change_id=stop.change_id) }}" method="POST">
+                            <button type="submit" name="decision" value="approve" class="btn m-2 btn-success"><i class="bi bi-check-lg"></i> Approve</button>
+                            <button type="submit" name="decision" value="reject" class="btn m-2 btn-danger"><i class="bi bi-x-lg"></i> Reject</button>
+                        </form>
+
+
+                    </div>
+                <div class="row">
+                    <div class="accordion accordion-flush" id="moreinfo-{{ stop.change_id }}">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#info-{{ stop.change_id }}">
+                                    More info...
+                                </button>
+                            </h2>
+                        </div>
+                        <div class="accordion-collapse collapse" id="info-{{ stop.change_id }}" data-bs-parent="#moreinfo-{{ stop.change_id }}">
+                            <div class="accordion-body">
+                                <div class="row">
+                                    {% if stop.change_type == "change" %}
+                                        <table class="table">
+                                            <tbody>
+                                                <tr>
+                                                    <th></th>
+                                                    <th scope="col">Old</th>
+                                                    <th scope="col">New</th>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">Name:</th>
+                                                    <td>{{ old_stops[stop.stop_id].name }}</td>
+                                                    <td>{{ stop.name }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">Type:</th>
+                                                    <td>{{ old_stops[stop.stop_id].type }}</td>
+                                                    <td>{{ stop.type }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">Latitude:</th>
+                                                    <td>{{ old_stops[stop.stop_id].lat | lattostr }}</td>
+                                                    <td>{{ stop.lat | lattostr }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">Longitude:</th>
+                                                    <td>{{ old_stops[stop.stop_id].long | longtostr }}</td>
+                                                    <td>{{ stop.long | longtostr }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">Map link:</th>
+                                                    <td><a class="btn btn-primary"
+                                                           href="https://mapy.cz/zakladni?x={{ stop.long }}&y={{ stop.lat }}&z=11&q=GPS%20{{ stop.lat }}%20{{ stop.long }}">
+                                                        Mapy.cz</a>
+                                                    </td>
+                                                    <td><a class="btn btn-primary"
+                                                           href="https://mapy.cz/zakladni?x={{ old_stops[stop.stop_id].long }}&y={{ old_stops[stop.stop_id].lat }}
+                                                           &z=11&q=GPS%20{{ old_stops[stop.stop_id].lat }}%20{{ old_stops[stop.stop_id].long }}">
+                                                        Mapy.cz</a>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    {% else %}
+                                        <table class="table">
+                                            <tbody>
+                                                <tr>
+                                                    <th scope="row">Type:</th>
+                                                    <td>{{ stop.type }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">Latitude:</th>
+                                                    <td>{{ stop.lat | lattostr }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">Longitude:</th>
+                                                    <td>{{ stop.long | longtostr }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">Map link:</th>
+                                                    <td><a class="btn btn-primary" href="https://mapy.cz/zakladni?x={{ stop.long }}&y={{ stop.lat }}&z=11&q=GPS%20{{ stop.lat }}%20{{ stop.long }}">Mapy.cz</a></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    {% endif %}
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+
+            </div>
+            {% endfor %}
+        </div>
+
+        <nav>
+            <ul class="pagination justify-content-center">
+                {% if stops_list.has_prev %}
+              <li class="page-item"><a class="page-link" href="{{ url_for('admin.approve_reject_stops_page', page=stops_list.prev_num) }}">Previous</a></li>
+                {% endif %}
+                {% for page in stops_list.iter_pages() %}
+                    {% if page %}
+                        <li class="page-item">
+                            <a class="page-link {% if page == stops_list.page %}active{% endif %}"
+                               href="{{ url_for('admin.approve_reject_stops_page', page=page) }}">{{ page }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+                {% if stops_list.has_next %}
+              <li class="page-item"><a class="page-link" href="{{ url_for('admin.approve_reject_stops_page', page=stops_list.next_num) }}">Next</a></li>
+                {% endif %}
+            </ul>
+      </nav>
+    </div>
+{% endblock %}

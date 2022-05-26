@@ -1,0 +1,68 @@
+{% if current_user.role == "admin" %}
+{% set extend_base = "admin_base.html" %}
+{% set title_h4 = "As Carrier: Manage Stops" %}
+{% elif current_user.role == "carrier" %}
+{% set extend_base = "carrier_base.html" %}
+{% set title_h4 = "Manage Stops" %}
+{% endif %}
+
+{% extends extend_base %}
+{% block title %}Manage Stops{% endblock %}
+{% block tab_content %}
+    <h4>{{ title_h4 }}</h4>
+    <div class="container p-0">
+        <div class="row justify-content-between">
+            <div id="add_stop" class="col">
+                <a type="button" class="btn button-primary shadow" href="{{ url_for('carrier.add_stop_page') }}" id="btn-admin_add_stop">Request new stop</a>
+            </div>
+            {#<div class="col  d-flex justify-content-end">
+                <form class="form d-flex">
+                    <input class="form-control" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success mx-2 my-2 my-sm-0 pl-4" type="submit">Search</button>
+                </form>
+            </div> #}
+        </div>
+    </div>
+
+
+    <div id="manage_stops_pages" class="mt-3">
+        <div id="stops_container"class="container-fluid">
+            {% for stop in stops_list.items %}
+            <div id="stop_card" class="container-fluid bg-light mb-3 p-2 d-flex justify-content-between">
+                <div id="stop_grid" class="container">
+                    <div class="row">
+                      <div class="col-sm-2">Stop id:</div>
+                      <div class="col">{{ stop.stop_id }}</div>
+                      <div class=""></div>
+                      <div class="col-sm-2">Stop name:</div>
+                      <div class="col">{{ stop.name }}</div>
+                    </div>
+                </div>
+                <a type="button" class="btn m-2 btn-secondary" href="{{ url_for('carrier.edit_stop_page', stop_id=stop.stop_id) }}"><i class="bi bi-pencil"></i></a>
+            </div>
+            {% endfor %}
+        </div>
+
+        <nav>
+            <ul class="pagination justify-content-center">
+                {% if stops_list.has_prev %}
+              <li class="page-item"><a class="page-link" href="{{ url_for('carrier.manage_stops_page', page=stops_list.prev_num) }}">Previous</a></li>
+                {% endif %}
+                {% for page in stops_list.iter_pages() %}
+                    {% if page %}
+                        <li class="page-item">
+                            <a class="page-link {% if page == stops_list.page %}active{% endif %}"
+                               href="{{ url_for('carrier.manage_stops_page', page=page) }}">{{ page }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+                {% if stops_list.has_next %}
+              <li class="page-item"><a class="page-link" href="{{ url_for('carrier.manage_stops_page', page=stops_list.next_num) }}">Next</a></li>
+                {% endif %}
+            </ul>
+      </nav>
+
+
+
+    </div>
+{% endblock %}

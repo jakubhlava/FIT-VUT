@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}Not Found{% endblock %}
+
+
+{% block content %}
+
+<div class="alert alert-danger" role="alert">
+    <h4 class="alert-heading"><i class="bi bi-exclamation-triangle me-2"></i>Not Found</h4>
+    <p>
+        The requested URL was not found on the server. 
+        If you entered the URL manually please check your spelling and try again.
+        <hr>
+    <p class="mb-0">
+        <a href="{{ url_for('main_page.signup_page') }}" class="alert-link">Sign up</a> / <a href="{{ url_for('main_page.login_page') }}" class="alert-link">Login</a> to your account or go back to <a href="/" class="alert-link">search connections</a>.  
+    </p>
+</div>
+
+{% endblock %}

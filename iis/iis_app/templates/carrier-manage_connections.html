@@ -1,0 +1,124 @@
+{% if current_user.role == "admin" %}
+{% set extend_base = "admin_base.html" %}
+{% set title_h4 = "As Carrier: Manage Connections" %}
+{% elif current_user.role == "carrier" %}
+{% set extend_base = "carrier_base.html" %}
+{% set title_h4 = "Manage Connections" %}
+{% endif %}
+
+{% extends extend_base %}
+{% block title %}Manage Connections{% endblock %}
+{% block tab_content %}
+
+<h4>{{ title_h4 }}</h4>
+    <div class="container p-0">
+        <div class="row justify-content-between">
+            <div id="add_stop" class="col d-flex justify-content-end">
+                <a type="button" class="btn button-primary shadow" href="{{ url_for('carrier.add_connection_page') }}" id="btn-admin_add_stop">Add Connection</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="manage_conections_pages" class="mt-3">
+        <div id="cons_container"class="container-fluid">
+            {% for conn in conn_list.items %}
+            <div id="stop_card" class="container-fluid bg-light mb-3 p-2 d-flex justify-content-between p-0 m-0">
+                
+                <div id="stop_grid" class="container p-0 m-0">
+                    <div class="row d-flex justify-content-between">
+                      <div class="col">
+                        <div class="row d-flex justify-content-between">
+                            <div class="col-sm-2">Connection id:</div>
+                            <div class="col">{{ conn.connection_id }}</div>
+                        </div>
+
+                        <div class="row d-flex justify-content-between">
+                            <div id="start_end_dest" class="col">
+                                <div class="d-flex flex-row justify-content-between">
+
+                                    <div class="my-2">{{ conn.stops[0].departure }} {{ conn.stops[0].static_stop.name }}
+                                        <i class="m-3 bi bi-arrow-right"></i>
+                                        {{ conn.stops[-1].departure }} {{ conn.stops[-1].static_stop.name }}
+                                    </div>
+                                    <div>
+                                        <div class="btn-group">
+                                            <div class="btn btn-secondary{% if conn.flags[0] == '0' %}-outline{% endif %} disabled">Mon</div>
+                                            <div class="btn btn-secondary{% if conn.flags[1] == '0' %}-outline{% endif %} disabled">Tue</div>
+                                            <div class="btn btn-secondary{% if conn.flags[2] == '0' %}-outline{% endif %} disabled">Wed</div>
+                                            <div class="btn btn-secondary{% if conn.flags[3] == '0' %}-outline{% endif %} disabled">Thu</div>
+                                            <div class="btn btn-secondary{% if conn.flags[4] == '0' %}-outline{% endif %} disabled">Fri</div>
+                                            <div class="btn btn-secondary{% if conn.flags[5] == '0' %}-outline{% endif %} disabled">Sat</div>
+                                            <div class="btn btn-secondary{% if conn.flags[6] == '0' %}-outline{% endif %} disabled">Sun</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row d-flex justify-content-between">
+                                    <div class="col-sm-2">Vehicle:</div>
+                                    <div class="col">{{ conn.vehicle_object.name }}</div>
+                                </div><div class="row d-flex justify-content-between">
+                                    <div class="col-sm-2">Carrier:</div>
+                                    <div class="col">{{ conn.carrier_user.full_name }}</div>
+                                </div>
+                            </div>
+                        </div>
+                      </div>
+                      <div class="col-sm-1">
+                          <div class="dropdown">
+                              <button class="btn btn-secondary dropdown-toggle m-2" data-bs-toggle="dropdown" >
+                                  <i class="bi bi-pencil"></i>
+                              </button>
+                              <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{{ url_for('carrier.delete_connection', conn_id=conn.connection_id) }}"><i class="bi bi-exclamation-triangle-fill text-danger"></i> Remove connection</a></li>
+                              </ul>
+                          </div>
+
+                      </div>
+                    </div>
+                    <div class="row">
+                        <div class="d-flex justify-content-center">
+                            <button class="btn m-2" type="button" data-bs-toggle="collapse" data-bs-target="#conn-{{ conn.connection_id }}" aria-expanded="false" aria-controls="collapseExample">
+                                <i class="bi bi-chevron-down"></i>
+                            </button>
+                        </div>
+            
+                        <div class="collapse" id="conn-{{ conn.connection_id }}">
+                            <div class="card card-body">
+                                {% for connstop in conn.stops %}
+                                <div>{{ connstop.departure }} {{ connstop.static_stop.name }}</div>
+                                    {% if not loop.last %}
+                                        <i class="m-3 bi bi-arrow-down"></i>
+                                    {% endif %}
+                                {% endfor %}
+
+                            </div>
+                        </div>
+                    </div>
+                </div>        
+            </div>
+            {% endfor %}
+        </div>
+
+        <nav>
+            <ul class="pagination justify-content-center">
+                {% if conn_list.has_prev %}
+              <li class="page-item"><a class="page-link" href="{{ url_for('carrier.manage_connections_page', page=conn_list.prev_num) }}">Previous</a></li>
+                {% endif %}
+                {% for page in conn_list.iter_pages() %}
+                    {% if page %}
+                        <li class="page-item">
+                            <a class="page-link {% if page == conn_list.page %}active{% endif %}"
+                               href="{{ url_for('carrier.manage_connections_page', page=page) }}">{{ page }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+                {% if conn_list.has_next %}
+              <li class="page-item">
+                  <a class="page-link" href="{{ url_for('carrier.manage_connections_page', page=conn_list.next_num) }}">
+                      Next</a>
+              </li>
+                {% endif %}
+            </ul>
+          </nav>
+    </div>
+{% endblock %}

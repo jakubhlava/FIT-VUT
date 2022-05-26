@@ -1,0 +1,64 @@
+<project xmlns:fx="javafx:com.sun.javafx.tools.ant">
+    <property name="classpath" location="lib/gson-2.8.6.jar:lib/ant-javafx.jar"/>
+
+    <target name="clean">
+        <delete dir="build/"/>
+        <delete dir="dest/"/>
+        <delete dir="doc/"/>
+    </target>
+
+    <target name="makedir" depends="clean">
+        <mkdir dir="build"/>
+        <mkdir dir="dest"/>
+        <mkdir dir="doc"/>
+    </target>
+
+    <path id="classes">
+        <fileset dir="lib" includes="**/*.jar" />
+    </path>
+
+    <target name="compile" depends="makedir">
+        <javac srcdir="src" destdir="build" includeantruntime="false" encoding="utf-8">
+            <modulepath path="lib/javafx-sdk-11.0.2/lib"/>
+            <compilerarg line="--add-modules javafx.controls,javafx.fxml,javafx.base,javafx.graphics,javafx.media,javafx.swing,javafx.web"/>
+            <classpath refid="classes"/>
+        </javac>
+        <jar destfile="dest/ija-app.jar" basedir="build">
+            <fileset dir="build" includes="**/*.class" />
+            <zipgroupfileset dir="lib" includes="**/*.jar" />
+            <manifest>
+                <attribute name="Main-Class" value="mainApp"/>
+            </manifest>
+            <fileset file="data/app.fxml"/>
+            <fileset file="data/add_request.fxml"/>
+        </jar>
+        <copy todir="dest/">
+            <fileset dir="lib" includes="javafx-sdk-11.0.2/**/*"/>
+        </copy>
+    </target>
+
+    <target name="run" depends="compile">
+        <java jar="dest/ija-app.jar" fork="true">
+            <modulepath path="dest/javafx-sdk-11.0.2/lib"/>
+            <jvmarg line="--add-modules javafx.controls,javafx.fxml,javafx.base,javafx.graphics,javafx.media,javafx.swing,javafx.web"/>
+        </java>
+    </target>
+
+    <target name="cleanDoc">
+        <delete dir="doc/"/>
+    </target>
+
+    <target name="makedirDoc" depends="cleanDoc">
+        <mkdir dir="doc/"/>
+    </target>
+
+    <target name="doc" depends="makedirDoc, compile">
+        <javadoc packagenames="src" sourcepath="src" destdir="doc" encoding="utf-8">
+            <classpath refid="classes"/>
+            <fileset dir="src">
+                <include name="**/*.java"/>
+            </fileset>
+        </javadoc>
+    </target>
+
+</project>

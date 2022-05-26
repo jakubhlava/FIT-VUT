@@ -1,0 +1,46 @@
+{#
+    Pohled pro vytváření balíčků
+    Vytvořil: Jakub Hlava (xhlava52)
+#}
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <div class="row py-2 my-2">
+        <div class="col-12">
+            <div class="card p-2 mb-2">
+                <div class="card-body">
+                    <h5 class="card-title">Nastavte balíček</h5>
+                    <form action="{{ url_for('builder.create') }}" method="POST">
+                        <div class="my-2">
+                            <label for="pkgName" class="fw-bold fs-6">Název</label>
+                            <input type="text" class="form-control bg-secondary text-light" id="pkgName" name="pkgName" required>
+                        </div>
+                        <div class="my-2">
+                            <label for="pkgDesc" class="fw-bold fs-6">Popis</label>
+                            <textarea rows="5" class="form-control bg-secondary text-light" id="pkgDesc" name="pkgDesc"></textarea>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 col-lg-6 p-2">
+                                <a href="#" class="btn btn-outline-danger d-inline-flex align-content-between align-items-center justify-content-between w-100">
+                                    <span class="material-icons mr-2">delete_forever</span>Zrušit
+                                </a>
+                            </div>
+                            <div class="col-12 col-lg-6 p-2">
+                                <button type="submit" class="btn btn-outline-success d-inline-flex align-content-between align-items-center justify-content-between w-100">
+                                Vytvořit balíček<span class="material-icons mr-2">save</span>
+                            </button>
+                            </div>
+                            <div class="mt-2 text-muted">
+                                <i>Po vytvoření balíčku budete přesměrování na stránku editace, kde můžete balíček naplnit otázkami!</i>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block js %}
+    <script src="{{ url_for('static', filename='js/decks.js') }}"></script>
+{% endblock %}

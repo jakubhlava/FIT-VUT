@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css')}}">
+    {% include 'snippets/css-inc.html' %}
+    {% block header %}
+    {% endblock %}
+</head>
+
+<body>
+
+
+    <nav class="navbar navbar-dark navbar-theme-primary navbar-expand mb-4">
+        <div class="container-fluid" id="navbar-default-primary">
+            <!--div id="whole-navbar" class="container-fluid d-flex justify-content-between w-100"-->
+                <!--div class="container-fluid align-items-center"-->
+                    <a class="navbar-brand" href="/">IIS Connections</a>
+                <!--/div-->
+                    {% block navbar_right %}
+                    {% endblock %}
+            <!--/div-->
+        </div>
+    </nav>
+
+    <div class="align-items-center my-2">
+        <div class="container p-2 my-2">
+            {% with msgs = get_flashed_messages(with_categories=true) %}
+            {% if msgs %}
+                {% for type, msg in msgs %}
+                    <div class="alert alert-{{ type }} alert-dismissible fade show">
+                        {{ msg | safe }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        </div>
+        <div class="container my-4">
+            {% block content %}
+            {% endblock %}
+        </div>
+
+    </div>
+    {% include 'snippets/js-inc.html' %}
+    {% block js %}
+    {% endblock %}
+</body>
+</html>

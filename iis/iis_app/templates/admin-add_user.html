@@ -1,0 +1,197 @@
+{% extends 'base.html' %}
+{% block title %}Add user{% endblock %}
+
+{% block navbar_right %}
+{% endblock %}
+
+{% block content %}
+<h4 class="p-3">Add User</h4>
+<div class="bg-light p-2 m-3">
+    <div id="edit_user_form">
+
+        <form id="addUserForm" class="p-3 needs-validation" action="{{ url_for('admin.add_user_page') }}" method="POST">
+
+            <div class="row mb-2 g-3 align-items-center">
+                <div class="col-sm-2">
+                  <label for="edit_username" class="col-form-label">Username:</label>
+                </div>
+                <div class="col">
+                  <input type="text" id="edit_username" name="username" class="form-control" required
+                  value="{% if username is defined and username != None %}{{ username }}{% endif %}">
+                    <div class="invalid-feedback">
+                        Please fill username.
+                    </div>
+                </div>
+                <div class="col">
+                  <span id="username_HelpInline" class="form-text">
+                      <i>Required</i>
+                  </span>
+                </div>
+            </div>
+            
+            <div class="row mb-2 g-3 align-items-center">
+                <div class="col-sm-2">
+                  <label for="edit_fullname" class="col-form-label">Full name:</label>
+                </div>
+                <div class="col">
+                  <input type="text" name="fullname" id="edit_fullname" class="form-control"
+                  value="{% if full_name is defined and full_name != None %}{{ full_name }}{% endif %}">
+                </div>
+                <div class="col">
+                  <span id="passwordHelpInline" class="form-text">
+                        Or company name if you are adding <i>carrier.</i>
+                  </span>
+                </div>
+            </div>
+
+            <div class="row mb-2 g-3 align-items-center">
+                <div class="col-sm-2">
+                  <label for="edit_role" class="col-form-label">Role:</label>
+                </div>
+                <div class="col">
+                  <select name="role" id="edit_role" class="form-select" onchange="personnelFill()" required>
+                      <option selected disabled value="">Choose role</option>
+                      <option value="admin">Admin</option>
+                      <option value="carrier">Carrier</option>
+                      <option value="personnel">Personnel</option>
+                      <option value="user">User</option>
+                  </select>
+                    <div class="invalid-feedback">
+                        Please pick a role.
+                    </div>
+              </div>
+                <div class="col">
+                  <span id="edit_role" class="form-text">
+                        <i>Required</i>
+                  </span>
+                </div>
+
+            </div>
+
+            <div class="row mb-2 g-3 align-items-center" id="carrier_selector" style="display:none;">
+                <div class="col-sm-2">
+                  <label for="edit_role" class="col-form-label">Carrier:</label>
+                </div>
+                <div class="col">
+                  <select name="carrier" id="carrier" class="form-select">
+
+                  </select>
+                    <div class="invalid-feedback">
+                        Please pick a carrier, so we can match new personnel with them.
+                    </div>
+              </div>
+                <div class="col">
+                  <span id="edit_role" class="form-text">
+                        <i>Required</i>
+                  </span>
+                </div>
+            </div>
+
+            <div class="row mb-2 g-3 align-items-center">
+                <div class="col-sm-2">
+                  <label for="edit_phone" class="col-form-label">Phone:</label>
+                </div>
+                <div class="col">
+                  <input type="type" id="edit_phone" name="phone" class="form-control"
+                  value="{% if phone is defined and phone != None %}{{ phone }}{% endif %}">
+                </div>
+                <div class="col">
+                  <span id="edit_role" class="form-text">
+                        Use +420 xxxxxxxxx format please.
+                  </span>
+                </div>
+            </div>
+
+            <div class="row mb-2 g-3 align-items-center">
+                <div class="col-sm-2">
+                  <label for="edit_email" class="col-form-label">Email:</label>
+                </div>
+                <div class="col">
+                  <input type="type" id="edit_email" name="email" class="form-control" required
+                  value="{% if email is defined and email != None %}{{ email }}{% endif %}">
+                    <div class="invalid-feedback">
+                        Please fill email.
+                    </div>
+                </div>
+                <div class="col">
+                  <span id="edit_role" class="form-text">
+                    <i>Required</i>
+                  </span>
+                </div>
+            </div>
+
+            <div class="row mb-2 g-3 align-items-center">
+                <div class="col-sm-2">
+                  <label for="inputPassword6" class="col-form-label">Password:</label>
+                </div>
+                <div class="col">
+                  <input type="password" id="inputPassword" name="password" class="form-control" aria-describedby="passwordHelpInline" oninput="checkPw(this, 'repeatPassword')" required>
+                    <div class="invalid-feedback">
+                        Password has to be filled and both passwords have to match!
+                    </div>
+                </div>
+                <div class="col">
+                  <span id="passwordHelpInline" class="form-text">
+                    <i>Required</i>
+                  </span>
+                </div>
+            </div><div class="row mb-2 g-3 align-items-center">
+                <div class="col-sm-2">
+                  <label for="repeatPassword" class="col-form-label">Repeat password:</label>
+                </div>
+                <div class="col">
+                  <input type="password" id="repeatPassword" class="form-control" aria-describedby="passwordHelpInline" oninput="checkPw(this, 'inputPassword')" required>
+                    <div class="invalid-feedback">
+                        Password has to be filled and both passwords have to match!
+                    </div>
+                </div>
+                <div class="col">
+                  <span id="passwordHelpInline" class="form-text">
+
+                  </span>
+                </div>
+            </div>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <a type="button" class="btn btn-outline-gray" href="{{ url_for('admin.main_page') }}"><i class="bi bi-door-open"></i> Back to admin panel</a>
+                <button type="submit" class="btn btn-success"><i class="bi bi-check-lg"></i> Create new user</button>
+            </div>
+        </form>
+    </div>
+
+
+</div>
+{% endblock %}
+
+{% block js %}
+    <script src="{{ url_for('static', filename='js/password_verifier.js') }}"></script>
+    <script>
+    function personnelFill() {
+        let carrier_select = $('#carrier')
+        if ($("#edit_role option:selected").val() === "personnel") {
+            carrier_select.append('<option selected disabled value="">Loading carriers...</option>');
+            $('#carrier_selector').show();
+            carrier_select.attr("required", true);
+            $.ajax("{{ url_for('admin.get_carriers') }}",
+            {
+                error: (xhr, status, error) => {
+                    $('#carrier option:selected').text("Unable to load carriers :(");
+                },
+                success: (data, status, xhr) => {
+                    console.log(data);
+                    $('#carrier option:selected').text("Choose carrier...");
+                    let carriers = JSON.parse(data);
+                    carriers.forEach((e) => {
+                       carrier_select.append(`<option value="${e.user_id}">${e.full_name}</option>`)
+                    });
+                }
+            }
+        );
+        } else {
+            $('#carrier_selector').hide();
+            carrier_select.empty();
+            carrier_select.attr("required", false);
+        }
+
+    }
+    </script>
+{% endblock %}

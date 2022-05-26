@@ -1,0 +1,29 @@
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js" integrity="sha256-hlKLmzaRlE8SCJC1Kw8zoUbU8BxA+8kR3gseuKfMjxA=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/gh/mgalante/jquery.redirect@master/jquery.redirect.js"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+<script src="{{ url_for('static', filename='js/autocomplete.js') }}"></script>
+<script>
+    $(document).ready(function(){
+        $(".dropdown-menu li a").click(function(){
+        $("#set_role_dropdown").text($(this).text());
+        });
+    });
+    // enable Bootstrap's validation on forms with .needs-validation
+    var forms = document.querySelectorAll('.needs-validation');
+      Array.prototype.slice.call(forms)
+        .forEach((f) => {
+            f.setAttribute('novalidate', true);
+            f.addEventListener('submit', (e) => {
+                if (!f.checkValidity()) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+
+                f.classList.add('was-validated');
+            }, false)
+        });
+</script>
+

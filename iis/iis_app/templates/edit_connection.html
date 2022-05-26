@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+{% block title %}Connection base{% endblock %}
+
+{% block header %}
+
+{% endblock %}
+
+{% block navbar_right %}
+{% endblock %}
+
+
+{% block content %}
+
+<h4 class="p-3">{% block con_title %}Edit Connection{% endblock %}</h4>
+<div id="indexContent" class="bg-light p-2 m-3" data-vehicle_names='{{ vehicle_names|tojson }}' data-stop_names='{{ stop_names|tojson }}'
+    data-carrier_names='{{ carrier_names|tojson }}'>
+    <div id="add_stop_form">
+
+        <form class="p-3" action="{% block con_action %}{% endblock %}" method="POST" id="editformcon">
+
+            {% for conid, coninfo in con_list.items() %}
+
+            <div class="row mb-2 g-3 align-items-center">
+                <div class="col-sm-2">
+                    <label for="edit_role" class="col-form-label">Connection id:</label>
+                </div>
+                <div class="col">{{ conid }}</div>
+            </div>
+
+
+            <div class="row mb-2 g-3 align-items-center">
+                <div class="col-sm-2">
+                    <label for="edit_role" class="col-form-label">Set departure:</label>
+                </div>
+                <div class="col">
+                    <div class="form-floating">
+                        <input value="{{ coninfo[0] }}" id="departure-time-bar" type="text" onfocus="(this.type='time')"
+                            class="form-control" required>
+                        <label for="time-bar">Time:</label>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-floating">
+                        <input id="con-from-bar" value="{{ coninfo[1] }}" type="search" class="form-control" required>
+                        <label for="con-from-bar">From:</label>
+                    </div>
+                </div>
+
+
+            </div>
+
+            <div class="row mb-2 g-3 align-items-center">
+                <div class="col-sm-2">
+                    <label for="edit_role" class="col-form-label">Set Arrival:</label>
+                </div>
+                <div class="col">
+                    <div class="form-floating">
+                        <input id="arrival-time-bar" value="{{ coninfo[2] }}" type="text" onfocus="(this.type='time')" class="form-control" required>
+                        <label for="time-bar">Time:</label>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-floating">
+                        <input id="con-to-bar" value="{{ coninfo[3] }}" type="search" class="form-control" required>
+                        <label for="con-to-bar">To:</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-2 g-3 align-items-center">
+                <div class="col-sm-2">
+                  <label for="vehicle_input" class="col-form-label">Vehicle:</label>
+                </div>
+                <div class="col">
+                  <input id="vehicle_input" value="{{ coninfo[4] }}" class="form-control" type="search" >
+                </div>
+            </div>
+
+              <div class="row mb-2 g-3 align-items-center">
+                <div class="col-sm-2">
+                  <label for="edit_role" class="col-form-label">Carrier:</label>
+                </div>
+        
+                <div class="col">
+                  <input id="carrier_input" value="{{ coninfo[5] }}" class="form-control" type="search">
+                </div>
+        
+              </div>
+
+            <div>
+
+                <div class="row mb-2 g-3 align-items-center">
+                    <div class="col-sm-2">
+                        <label for="edit_role" class="col-form-label">First Stop:</label>
+                    </div>
+                    <div class="col">
+                        <span id="first-stop-time" type="time"></span>
+                    </div>
+                    <div class="col">
+                        <span id="first-stop" type="search"></span>
+                    </div>
+                </div>
+                <div>
+                    <div id="stop_list">
+                    </div>
+                    <div class="d-flex justify-content-center" style="margin-top: 15px;">
+                        <button class="btn btn-outline-success mx-2 my-2 my-sm-0 pl-4" onclick="addrow()">Add
+                            Stop</button>
+                    </div>
+                </div>
+                <div class="row mb-2 g-3 align-items-center">
+                    <div class="col-sm-2">
+                        <label for="edit_role" class="col-form-label">Last Stop:</label>
+                    </div>
+                    <div class="col">
+                        <span id="last-stop-time" type="time"></span>
+                    </div>
+                    <div class="col">
+                        <span id="last-stop" type="search"></span>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row mb-2 g-3 align-items-center">
+
+            </div>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <a type="button" class="btn btn-outline-gray" href="{{ back_btn }}"><i class="bi bi-door-open"></i> Back
+                    to
+                    panel</a>
+                <button form="editformstop" type="submit" class="btn btn-success"><i class="bi bi-check-lg"></i>{% block
+                    con_sendbutton %}{% endblock %}</button>
+                <a type="button" class="btn btn-danger" href="{{ back_btn }}"><i class="bi bi-x-lg"></i> Delete
+                    Connection</a>
+            </div>
+
+            {% endfor %}
+        </form>
+    </div>
+
+
+</div>
+
+{% endblock %}
+{% block js %}
+{#<script> 
+    var nmb = {{ some variable for add stop feature }} 
+</script>#}
+<script src="{{ url_for('static', filename='js/add_con.js') }}"></script>
+
+{% endblock %}

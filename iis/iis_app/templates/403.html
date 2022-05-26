@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}Forbidden{% endblock %}
+
+
+{% block content %}
+
+<div class="alert alert-danger" role="alert">
+    <h4 class="alert-heading"><i class="bi bi-exclamation-triangle me-2"></i>Forbidden</h4>
+    <p>You don't have the permission to access the requested resource.
+        It is either read-protected or not readable by the server.
+    <hr>
+    <p class="mb-0">
+        <a href="{{ url_for('main_page.signup_page') }}" class="alert-link">Sign up</a> / <a href="{{ url_for('main_page.login_page') }}" class="alert-link">Login</a> to your account or go back to <a href="/" class="alert-link">search connections</a>.  
+    </p>
+</div>
+
+{% endblock %}

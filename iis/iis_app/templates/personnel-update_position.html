@@ -1,0 +1,197 @@
+{% if current_user.role == "admin" %}
+{% set extend_base = "admin_base.html" %}
+{% set title_h4 = "As Personnel: Update Position" %}
+{% elif current_user.role == "personnel" %}
+{% set extend_base = "personnel_base.html" %}
+{% set title_h4 = "Update Position" %}
+{% endif %}
+
+{% extends extend_base %}
+{% block title %}Update Position{% endblock %}
+{% block tab_content %}
+
+{% block header %}
+<script src="https://api.mapy.cz/loader.js"></script>
+<script>Loader.load(null, {suggest:true});</script>
+<style>
+    #map img {
+        max-width: none;
+    }
+</style>
+{% endblock %}
+
+
+<h4>{{ title_h4 }}</h4>
+    <div class="alert alert-info">
+        <h3 class="alert-heading">Hello, please read this!</h3>
+        <p>This functionality may seem a bit weirdly implemented, but it's just a simulation of our idea.</p>
+        <p>We assume that this part of system would be used by personnel on-the-go on some kind of smartphone or tablet
+            which has geolocation capabilities. So instead of using some stop selector and moving vehicle from stop to stop, we are trying to set
+        current vehicle position via HTML Geolocation API.
+        </p>
+        <p>But this is hard to show on a desktop while you are rating our work, so we decided to provide map picker,
+        so you can try backend functionality on your own without need of running around your house with a smartphone :)</p>
+    </div>
+    <form class="p-3 needs-validation" id="posForm" action="{{ url_for('personnel.update_position_page') }}" method="POST">
+        <div class="row mb-2 g-3 align-items-center">
+            <div class="col-sm-2">
+              <label for="connection" class="col-form-label">Connection:</label>
+            </div>
+            <div class="col">
+              <select id="connection" name="conn" class="form-control" onchange="getVehiclePosition()" required>
+              {% if con_list %}
+                  <option value="" disabled {% if curconn is not defined %} selected {% endif %}>Please select connection...</option>
+                  {% for conn in con_list %}
+                      <option value="{{ conn.connection_id }}" {% if curconn is defined and curconn == conn.connection_id %}selected{% endif %}>Connection {{ conn.connection_id }} {% if current_user.role == "admin" %} ({{ conn.carrier_user.full_name }}) {% endif %}</option>
+                  {% endfor %}
+              {% else %}
+                  <option value="" disabled selected>No connections for today are available...</option>
+              {% endif %}
+              </select>
+            <div class="invalid-feedback">
+                Please select connection.
+            </div>
+        </div>
+        <div class="col">
+              <span class="form-text">
+                    <i>Required</i>
+              </span>
+            </div>
+        </div>
+        <div class="row mb-2 g-3 align-items-center">
+            <div class="col-sm-2">
+              <label for="edit_lat" class="col-form-label">Latitude:</label>
+            </div>
+            <div class="col">
+              <input type="text" id="edit_lat" name="lat" class="form-control" required {% if lat is defined %}value="{{ lat }}"{% endif %}>
+            <div class="invalid-feedback">
+                Please fill latitude or pick a position in map.
+            </div>
+            </div>
+            <div class="col">
+              <span class="form-text">
+                    <i>Required</i>
+              </span>
+            </div>
+        </div>
+
+        <div class="row mb-2 g-3 align-items-center">
+            <div class="col-sm-2">
+              <label for="edit_long" class="col-form-label">Longitude:</label>
+            </div>
+            <div class="col">
+              <input type="text" id="edit_long" name="long" class="form-control" required {% if long is defined %}value="{{ long }}"{% endif %}>
+            <div class="invalid-feedback">
+                Please fill longitude or pick a position in map.
+            </div>
+            </div>
+            <div class="col">
+              <span class="form-text">
+                <i>Required</i>
+              </span>
+            </div>
+        </div>
+</form>
+        <div class="row mb-1 ms-auto w-50 justify-content-end">
+            <div>
+                <input type="text" id="mapSearch" class="form-control" placeholder="Search places here...">
+            </div>
+
+        </div>
+        <div class="row mb-2 g-3 align-items-center">
+            <div class="col justify-content-center">
+                <div id="map" style="height: 480px;"></div>
+            </div>
+        </div>
+
+
+<div class="d-grid gap-2 d-md-flex justify-content-md-end" role="toolbar">
+    <button type="button" class="btn btn-info m-2" onclick="getLoc()">Refresh my GPS position</button>
+    <a href="{{ url_for('personnel.manage_reservations_page') }}" type="button" class="btn btn-outline-grey m-2"><i class="bi bi-door-open"></i> Back to reservations</a>
+    <button type="submit" class="btn btn-success m-2" form="posForm">Update position</button>
+</div>
+
+{% endblock %}
+
+{% block js %}
+    <script>
+    const lat_inp = $("#edit_lat");
+    const long_inp = $("#edit_long");
+        let start = SMap.Coords.fromWGS84("16.6078411E", "49.2002211N");
+
+        if (lat_inp.val() === "") {
+            lat_inp.val(start.toWGS84(0)[1]);
+            long_inp.val(start.toWGS84(0)[0]);
+        } else {
+            start = SMap.Coords.fromWGS84(long_inp.val(), lat_inp.val())
+        }
+		let map = new SMap(JAK.gel("map"), start, 12);
+		map.addDefaultLayer(SMap.DEF_BASE).enable();
+		map.addDefaultControls();
+		let mouse_control = new SMap.Control.Mouse(SMap.MOUSE_PAN | SMap.MOUSE_WHEEL | SMap.MOUSE_ZOOM);
+        map.addControl(mouse_control);
+        let marker_layer = new SMap.Layer.Marker();
+        map.addLayer(marker_layer).enable();
+        let marker = new SMap.Marker(start);
+        marker.decorate(SMap.Marker.Feature.Draggable);
+        marker_layer.addMarker(marker);
+
+        let signals = map.getSignals();
+        signals.addListener(window, "marker-drag-stop", (e) => {
+            let coords = e.target.getCoords();
+            lat_inp.val(coords.toWGS84(0)[1]);
+            long_inp.val(coords.toWGS84(0)[0]);
+        });
+        signals.addListener(window, "map-click", (e, f) => {
+            let coords = SMap.Coords.fromEvent(e.data.event, map);
+            marker.setCoords(coords);
+            lat_inp.val(coords.toWGS84(0)[1]);
+            long_inp.val(coords.toWGS84(0)[0]);
+        });
+        var inputEl = document.querySelector("#mapSearch");
+        var suggest = new SMap.Suggest(inputEl);
+        suggest.map(map);
+        suggest.addListener("suggest", (data) => {
+            let coords = new SMap.Coords(data.data.longitude, data.data.latitude)
+           marker.setCoords(coords);
+            map.setCenter(coords, true);
+           lat_inp.val(coords.toWGS84(0)[1]);
+            long_inp.val(coords.toWGS84(0)[0]);
+        });
+
+    function getLoc() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition((pos) => {
+                let coords = new SMap.Coords(pos.coords.longitude, pos.coords.latitude);
+                marker.setCoords(coords);
+                map.setCenter(coords, true);
+                lat_inp.val(coords.toWGS84(0)[1]);
+                long_inp.val(coords.toWGS84(0)[0]);
+            });
+        }
+    }
+
+    function getVehiclePosition() {
+        let conn = $("#connection option:selected").val()
+        $.ajax(`{{ url_for('personnel.get_cvpos') }}`,
+            {
+                data: {
+                    conn_id: conn
+                },
+                success: (data, status, xhr) => {
+                    let coords = new SMap.Coords(data.long, data.lat);
+                    marker.setCoords(coords);
+                    map.setCenter(coords, true);
+                    lat_inp.val(coords.toWGS84(0)[1]);
+                    long_inp.val(coords.toWGS84(0)[0]);
+                }
+            })
+    }
+
+    window.onload = () => {
+        getLoc();
+    }
+    </script>
+
+
+{% endblock %}

@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  Copyright (c) 2015, 2019, Gluon and/or its affiliates.
+  All rights reserved. Use is subject to license terms.
+
+  This file is available and licensed under the following license:
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions
+  are met:
+
+  - Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+  - Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in
+    the documentation and/or other materials provided with the distribution.
+  - Neither the name of Oracle Corporation nor the names of its
+    contributors may be used to endorse or promote products derived
+    from this software without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+
+<?import javafx.scene.Group?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane fx:id="root" prefHeight="850.0" prefWidth="1384.0" style="-fx-font-family: Arial;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.UIController">
+   <center>
+      <BorderPane prefHeight="374.0" prefWidth="640.0" BorderPane.alignment="CENTER">
+         <right>
+            <TabPane fx:id="tabs" pickOnBounds="false" prefHeight="780.0" prefWidth="296.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+              <tabs>
+                <Tab fx:id="tab_carts" text="Vozíky">
+                     <content>
+                        <BorderPane prefHeight="200.0" prefWidth="200.0">
+                           <center>
+                              <ListView fx:id="cart_list" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+                           </center>
+                           <bottom>
+                              <Pane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                                 <children>
+                                    <ListView fx:id="cart_content" layoutX="10.0" layoutY="38.0" prefHeight="148.0" prefWidth="273.0" />
+                                    <Label layoutX="14.0" layoutY="14.0" text="Stav:" />
+                                    <Label fx:id="cart_state" layoutX="49.0" layoutY="14.0" text="&lt;nevybrán&gt;" />
+                                 </children>
+                              </Pane>
+                           </bottom>
+                        </BorderPane>
+                     </content>
+                </Tab>
+                <Tab text="Požadavky">
+                     <content>
+                        <BorderPane prefHeight="200.0" prefWidth="200.0">
+                           <center>
+                              <ListView fx:id="request_list" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+                           </center>
+                           <bottom>
+                              <BorderPane prefHeight="246.0" prefWidth="231.0" BorderPane.alignment="CENTER">
+                                 <bottom>
+                                    <Pane prefHeight="52.0" prefWidth="231.0" BorderPane.alignment="CENTER">
+                                       <children>
+                                          <Button fx:id="btn_remove_request" layoutX="162.0" layoutY="14.0" mnemonicParsing="false" onAction="#remove_request" prefHeight="25.0" prefWidth="120.0" text="Odebrat" />
+                                          <Button fx:id="btn_add_request" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#add_request" prefHeight="25.0" prefWidth="120.0" text="Přidat" />
+                                       </children>
+                                    </Pane>
+                                 </bottom>
+                                 <center>
+                                    <ListView fx:id="request_content" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+                                 </center>
+                              </BorderPane>
+                           </bottom>
+                        </BorderPane>
+                     </content>
+                </Tab>
+                  <Tab fx:id="tab_shelves" text="Sklad">
+                     <content>
+                        <BorderPane prefHeight="200.0" prefWidth="200.0">
+                           <center>
+                              <ListView fx:id="shelf_list" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+                           </center>
+                           <bottom>
+                              <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                                 <center>
+                                    <ListView fx:id="shelf_content" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+                                 </center>
+                                 <top>
+                                    <Label prefHeight="17.0" prefWidth="76.0" text="Obsah regálu:" BorderPane.alignment="CENTER" />
+                                 </top>
+                              </BorderPane>
+                           </bottom>
+                        </BorderPane>
+                     </content>
+                  </Tab>
+                  <Tab text="Nastavení">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <Label layoutX="14.0" layoutY="14.0" text="Velikost vozíku" />
+                              <Button fx:id="btn_set_cart_size" layoutX="206.0" layoutY="64.0" mnemonicParsing="false" onAction="#set_cart_size" prefHeight="25.0" prefWidth="72.0" text="Nastavit" />
+                              <Label layoutX="14.0" layoutY="183.0" text="Soubor s mapou" />
+                              <TextField fx:id="default_map_path" layoutX="13.0" layoutY="200.0" prefWidth="239.0" />
+                              <TextField fx:id="cart_size" layoutX="14.0" layoutY="31.0" prefHeight="23.0" prefWidth="270.0" promptText="počet kusů (výchozí: 10)" />
+                              <Button fx:id="btn_set_default_map" layoutX="206.0" layoutY="231.0" mnemonicParsing="false" onAction="#set_map_file" prefHeight="25.0" prefWidth="72.0" text="Nastavit" />
+                              <Label layoutX="14.0" layoutY="266.0" text="Rychlost simulace" />
+                              <Button fx:id="btn_pick_map_path" layoutX="251.0" layoutY="200.0" mnemonicParsing="false" onAction="#pick_map_file" prefWidth="18.0" text="..." />
+                              <Slider fx:id="slider_sim_speed" blockIncrement="0.1" layoutX="14.0" layoutY="290.0" majorTickUnit="2.0" max="20.0" minorTickCount="1" prefWidth="270.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="1.0" />
+                              <Label fx:id="label_sim_speed" layoutX="14.0" layoutY="328.0" text="1" />
+                              <Button fx:id="btn_set_sim_speed" layoutX="206.0" layoutY="331.0" mnemonicParsing="false" onAction="#set_sim_speed" prefHeight="25.0" prefWidth="72.0" text="Nastavit" />
+                              <Label layoutX="16.0" layoutY="378.0" text="Přeskočit v simulaci" />
+                              <TextField fx:id="jump_steps" layoutX="14.0" layoutY="395.0" prefWidth="270.0" promptText="počet kroků" />
+                              <Button fx:id="btn_jump" layoutX="206.0" layoutY="427.0" mnemonicParsing="false" onAction="#jump_to_step" prefHeight="25.0" prefWidth="72.0" text="Skočit" />
+                              <Button fx:id="btn_save_settings" layoutX="12.0" layoutY="500.0" mnemonicParsing="false" onAction="#save_settings" prefHeight="25.0" prefWidth="270.0" text="Uložit nastavení" />
+                              <Label layoutX="16.0" layoutY="101.0" text="Maximální počet vozíků" />
+                              <TextField fx:id="cart_limit" layoutX="12.0" layoutY="118.0" prefWidth="270.0" />
+                              <Button fx:id="btn_set_cart_limit" layoutX="206.0" layoutY="150.0" mnemonicParsing="false" onAction="#set_cart_limit" prefHeight="25.0" prefWidth="72.0" text="Nastavit" />
+                           </children>
+                        </AnchorPane>
+                    </content>
+                  </Tab>
+              </tabs>
+            </TabPane>
+         </right>
+         <center>
+            <ScrollPane fx:id="map_root" fitToHeight="true" fitToWidth="true" hbarPolicy="ALWAYS" pannable="true" prefHeight="200.0" prefWidth="1033.0" style="-fx-background-color: #bbbbbb;" vbarPolicy="ALWAYS" BorderPane.alignment="CENTER">
+               <content>
+                  <VBox fx:id="map_vbox" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #444;">
+                     <children>
+                        <Group fx:id="map_group" />
+                     </children>
+                  </VBox>
+               </content>
+            </ScrollPane>
+         </center>
+      </BorderPane>
+   </center>
+   <top>
+    <MenuBar BorderPane.alignment="CENTER">
+      <menus>
+        <Menu mnemonicParsing="false" text="Sklad...">
+               <items>
+                  <MenuItem fx:id="menu_ld_map" mnemonicParsing="false" onAction="#load_map" text="Načíst mapu..." />
+                  <MenuItem fx:id="menu_ld_storage" mnemonicParsing="false" onAction="#load_storage" text="Načíst sklad..." />
+                  <MenuItem fx:id="menu_ld_requests" mnemonicParsing="false" onAction="#load_requests" text="Načíst požadavky..." />
+                  <MenuItem fx:id="menu_save_requests" mnemonicParsing="false" onAction="#save_requests" text="Uložit požadavky..." />
+               </items>
+        </Menu>
+      </menus>
+    </MenuBar>
+   </top>
+   <bottom>
+      <AnchorPane prefHeight="45.0" prefWidth="854.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button fx:id="btn_start" layoutX="14.0" layoutY="10.0" mnemonicParsing="false" onAction="#start_simulation" prefHeight="25.0" prefWidth="70.0" text="Start" />
+            <Button fx:id="btn_stop" layoutX="92.0" layoutY="10.0" mnemonicParsing="false" onAction="#stop_simulation" prefHeight="25.0" prefWidth="70.0" text="Stop" />
+            <Button fx:id="btn_reset" layoutX="170.0" layoutY="10.0" mnemonicParsing="false" onAction="#reset_simulation" prefHeight="25.0" prefWidth="70.0" text="Reset" />
+            <Label fx:id="lbl_step" layoutX="248.0" layoutY="6.0" text="0">
+               <graphic>
+                  <Label text="Krok:" />
+               </graphic>
+            </Label>
+            <Label fx:id="lbl_cart_count" layoutX="248.0" layoutY="24.0" text="0/0">
+               <graphic>
+                  <Label text="Počet vozíků:" />
+               </graphic></Label>
+            <Label fx:id="lbl_task_count" layoutX="369.0" layoutY="6.0" text="0">
+               <graphic>
+                  <Label text="Počet úkolů:" />
+               </graphic></Label>
+         </children>
+      </AnchorPane>
+   </bottom>
+</BorderPane>

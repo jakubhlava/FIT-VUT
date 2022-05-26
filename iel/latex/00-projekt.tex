@@ -1,0 +1,31 @@
+%%%%% Projekt z předmětu IEL %%%% 
+%% Autor: (Jakub Hlava [xhlava52])
+
+\documentclass[]{fitiel} % dokumenty v češtině, implicitní
+% \documentclass[slovak]{fitiel} % odkomentujte pro dokumenty ve slovenštině
+% \documentclass[english]{fitiel} % odkomentujte pro dokumenty v angličtině
+
+% implicitní cesta k obrázkům
+\graphicspath{{fig/}}
+
+% hlavička 
+% příkaz logo - vkládá logo fakulty dle zvoleného jazyka
+\title{\logo\\IEL -- protokol k projektu}
+\author{Jakub Hlava \\ xhlava52}
+\date{\today} % today - dnešní datum
+
+\begin{document}
+	\maketitle
+	
+	\tableofcontents
+	
+	\newpage
+
+	%% vložení jednotlivých příkladů
+	\input{01-pr1.tex} \newpage
+	\input{02-pr2.tex} \newpage
+
+	%% vložení tabulky s přehledem výsledků
+	\input{06-tab.tex}
+	
+\end{document}

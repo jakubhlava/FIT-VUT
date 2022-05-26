@@ -1,0 +1,18 @@
+{#
+    Řízení flash notifikací z backendu
+    Vytvořil: Jakub Hlava (xhlava52)
+#}
+{% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+        <div class="container my-4">
+            {% for cat, msg in messages %}
+                <div class="alert alert-{{ cat }} alert-dismissible fade show">
+                    {{ msg }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert">
+                    </button>
+                </div>
+
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}

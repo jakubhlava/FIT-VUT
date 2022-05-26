@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% block title %}Edit personnel account{% endblock %}
+
+{% block navbar_right %}
+{% endblock %}
+
+{% block content %}
+<h4 class="p-3">Edit Personnel account</h4>
+<div class="bg-light p-2 m-3">
+    <div id="edit_user_form">
+
+        <form class="p-3 needs-validation" method="POST" action="{{ url_for('carrier.edit_personnel_page', user_id=user.user_id) }}" id="editform">
+
+            <div class="row mb-2 g-3 align-items-center">
+                <div class="col-sm-2">
+                  <label for="edit_username" class="col-form-label">Username:</label>
+                </div>
+                <div class="col">
+                  <input type="text" name="username" id="edit_username" class="form-control" value="{{ user.username }}">
+                </div>
+                <div class="col">
+                  <span id="username_HelpInline" class="form-text">
+
+                  </span>
+                </div>
+            </div>
+
+            <div class="row mb-2 g-3 align-items-center">
+                <div class="col-sm-2">
+                  <label for="edit_fullname" class="col-form-label">Full name:</label>
+                </div>
+                <div class="col">
+                  <input type="text" name="fullname" id="edit_fullname" class="form-control" {% if user.full_name != None %}value="{{ user.full_name }}"{% endif %}>
+                </div>
+                <div class="col">
+                  <span id="passwordHelpInline" class="form-text">
+
+                  </span>
+                </div>
+            </div>
+
+            <div class="row mb-2 g-3 align-items-center">
+                <div class="col-sm-2">
+                  <label for="edit_phone" class="col-form-label">Phone:</label>
+                </div>
+                <div class="col">
+                  <input type="text" name="phone" id="edit_phone" class="form-control" {% if user.phone != None %}value="{{ user.phone }}"{% endif %}>
+                </div>
+                <div class="col">
+                  <span id="edit_role" class="form-text">
+
+                  </span>
+                </div>
+            </div>
+
+            <div class="row mb-2 g-3 align-items-center">
+                <div class="col-sm-2">
+                  <label for="edit_email" class="col-form-label">Email:</label>
+                </div>
+                <div class="col">
+                  <input type="type" id="edit_email" class="form-control" value="{{ user.email }}">
+                </div>
+                <div class="col">
+                  <span id="edit_role" class="form-text">
+
+                  </span>
+                </div>
+            </div>
+
+            <div class="row mb-2 g-3 align-items-center">
+                <div class="col-sm-2">
+                  <label for="inputPassword6" class="col-form-label">Password:</label>
+                </div>
+                <div class="col">
+                  <input type="password" name="password" id="inputPassword6" class="form-control" aria-describedby="passwordHelpInline" oninput="checkPw(this, 'inputPassword')">
+                </div>
+                <div class="col">
+                  <span id="passwordHelpInline" class="form-text">
+                        Fill <b><i>ONLY</i></b> in case that you are changing this user's password!
+                  </span>
+                </div>
+            </div>
+            <div class="row mb-2 g-3 align-items-center">
+                <div class="col-sm-2">
+                  <label for="repeatPassword" class="col-form-label">Repeat password:</label>
+                </div>
+                <div class="col">
+                  <input type="password" id="repeatPassword" class="form-control" aria-describedby="passwordHelpInline" oninput="checkPw(this, 'inputPassword')">
+                </div>
+                <div class="col">
+                  <span id="passwordHelpInline" class="form-text">
+
+                  </span>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+        <a type="button" class="btn btn-outline-gray" href="{{ url_for('carrier.manage_personnel_page') }}"><i class="bi bi-door-open"></i> Back to admin panel</a>
+        <button form="editform" type="submit" class="btn btn-success"><i class="bi bi-check-lg"></i> Save user</button>
+        <a type="button" class="btn btn-danger" href="{{ url_for('carrier.delete_user', user_id=user.user_id) }}"><i class="bi bi-x-lg"></i> Delete user</a>
+    </div>
+</div>
+{% endblock %}

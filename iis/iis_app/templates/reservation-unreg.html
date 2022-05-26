@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block title %}Reservation{% endblock %}
+
+{% block navbar_right %}
+    <ul class="navbar-nav">
+        {% include 'snippets/user.html' %}
+    </ul>
+{% endblock %}
+{% block content %}
+    <div class="align-items-center">
+        <div class="mt-3 col-12 d-flex align-items-center justify-content-center" >
+            <div class="bg-white shadow rounded border-light p-lg-5 fmxv-500">
+                    <h1 class="h3 font-weight-normal">Please enter your credentials:</h1>
+                    <form class="mt-2 d-grid" method="POST" action="{{ url_for('reservation.reservation_page', connection_id=connection.connection_id, quantity=quantity, frm_stop_id=frm_stop.stop_id, to_stop_id=to_stop.stop_id, datetime=datetime) }}">
+
+                        <div class="form-group mb-2">
+                            <label for="fullname">Full Name</label>
+                            <input type="text" id="fullname" name="fullname" class="form-control" placeholder="e.g. Squidward Tentacles" autofocus="">
+                        </div>
+
+                        <div class="form-group mb-2">
+                            <label for="email">Email <small class="text-danger">*</small></label>
+                            <input type="email" id="email" name="email" class="form-control" placeholder="e.g. mrkrabs@krustykrab.com" required="" autofocus="">
+                        </div>
+
+                        <div class="form-group mb-2">
+                            <label for="phone_number">Phone number</label>
+                            <input type="tel" id="phone_number" name="phone_number" class="form-control" placeholder="123 456 789" autofocus="">
+                        </div>
+
+                        <button class="btn btn-primary">Next</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

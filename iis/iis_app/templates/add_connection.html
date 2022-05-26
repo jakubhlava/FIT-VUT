@@ -1,0 +1,192 @@
+{% extends 'base.html' %}
+{% block title %}Add connection{% endblock %}
+
+{% block header %}
+{% endblock %}
+
+{% block navbar_right %}
+{% endblock %}
+
+{% block content %}
+    <h4 class="p-3">{% block con_title %}{% endblock %}</h4>
+    <div id="indexContent" class="bg-light p-2 m-3" data-stop_names='{{ stop_names|tojson }}'>
+        <div id="add_stop_form">
+
+            <form class="p-3 needs-validation" action="{% block con_action %}{% endblock %}" method="POST" id="editformcon">
+
+                <div class="row mb-2 g-3 align-items-center">
+                    <div class="col-sm-2">
+                        <label for="departure-time-bar" class="col-form-label">Departure:</label>
+                    </div>
+                    <div class="col">
+                        <div class="form-floating">
+                            <input id="departure-time-bar" type="time" class="form-control" placeholder="12:12 AM"
+                                   name="dep_time" required>
+                            <label for="time-bar">Time:</label>
+                            <div class="invalid-feedback">
+                                Please fill time of departure!
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-floating">
+                            <input id="con-from-bar" type="search" class="form-control" name="dep_stop" required>
+                            <label for="con-from-bar">From:</label>
+                            <div class="invalid-feedback">
+                                Please fill departure stop!
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mb-2 g-3 align-items-center">
+                    <div class="col-sm-2">
+                        <label for="edit_role" class="col-form-label">Arrival:</label>
+                    </div>
+                    <div class="col">
+                        <div class="form-floating">
+                            <input id="arrival-time-bar" type="time" class="form-control" name="arr_time" required>
+                            <label for="time-bar">Time:</label>
+                        </div>
+                        <div class="invalid-feedback">
+                             Please fill time of arrival!
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-floating">
+                            <input id="con-to-bar" type="search" class="form-control" name="arr_stop" required>
+                            <label for="con-to-bar">To:</label>
+                            <div class="invalid-feedback">
+                                Please fill arrival stop!
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            {% if current_user.role == "admin" %}
+                <div class="row mb-2 g-3 align-items-center">
+                    <div class="col-sm-2">
+                        <label for="carrier_input" class="col-form-label">Carrier:</label>
+                    </div>
+
+                    <div class="col">
+                        <select id="carrier_input" name="carrier" class="form-control" required
+                                {% if current_user.role == "carrier" %} disabled {% endif %}>
+                            {% if current_user.role == "carrier" %}
+                                <option value="{{ current_user.user_id }}"
+                                        selected>{{ current_user.full_name }}</option>
+                            {% else %}
+                                <option selected disabled value="">Click to select carrier...</option>
+                                {% for carrier in carriers %}
+                                    <option value="{{ carrier.user_id }}">{{ carrier.full_name }}</option>
+                                {% endfor %}
+                            {% endif %}
+                        </select>
+                    </div>
+                </div>
+            {% endif %}
+
+                <div class="row mb-2 g-3 align-items-center">
+                    <div class="col-sm-2">
+                        <label for="vehicle_input" class="col-form-label">Vehicle:</label>
+                    </div>
+                    <div class="col">
+                        <select id="vehicle_input" name="vehicle" class="form-control" required>
+                            <option selected disabled value="">Click to select vehicle...</option>
+                            {% for vehicle in vehicles %}
+                                <option value="{{ vehicle.vehicle_id }}">{{ vehicle.name }} ({{ vehicle.type }},
+                                    {{ vehicle.carrier_user.full_name }}, ID: {{ vehicle.vehicle_id }})
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="row mb-2 g-3 align-items-center">
+                    <div class="col-sm-2">
+                        <label for="repeat-box">Days of week:</label>
+                    </div>
+                    <div class="col">
+                        <div class="btn-group" role="group" >
+                            <input type="checkbox" class="btn-check" name="day0" id="checkday0" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="checkday0">Mon</label>
+                            <input type="checkbox" class="btn-check" name="day1" id="checkday1" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="checkday1">Tue</label>
+                            <input type="checkbox" class="btn-check" name="day2" id="checkday2" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="checkday2">Wed</label>
+                            <input type="checkbox" class="btn-check" name="day3" id="checkday3" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="checkday3">Thu</label>
+                            <input type="checkbox" class="btn-check" name="day4" id="checkday4" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="checkday4">Fri</label>
+                            <input type="checkbox" class="btn-check" name="day5" id="checkday5" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="checkday5">Sat</label>
+                            <input type="checkbox" class="btn-check" name="day6" id="checkday6" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="checkday6">Sun</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="row mb-2 g-3 align-items-center">
+                        <div class="col-sm-2">
+                            <label for="edit_role" class="col-form-label">First Stop:</label>
+                        </div>
+                        <div class="col">
+                            <span id="first-stop-time" type="time"></span>
+                        </div>
+                        <div class="col">
+                            <span id="first-stop" type="search"></span>
+                        </div>
+                        <div class="col"></div>
+                    </div>
+                    <div>
+                        <div id="stop_list">
+                        </div>
+                        <div class="d-flex justify-content-center" style="margin-top: 15px;">
+                            <button class="btn btn-outline-success mx-2 my-2 my-sm-0 pl-4" onclick="addrow()">Add Stop
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row mb-2 pb-3 g-3 align-items-center">
+                        <div class="col-sm-2">
+                            <label for="edit_role" class="col-form-label">Last Stop:</label>
+                        </div>
+                        <div class="col">
+                            <span id="last-stop-time" type="time"></span>
+                        </div>
+                        <div class="col">
+                            <span id="last-stop" type="search"></span>
+                        </div>
+                        <div class="col">
+                            <div class="form-floating">
+                                <input id="last_stop_price" type="number" min="0" class="form-control" name="last_stop_price" oninput="this.value = Math.round(this.value);" required>
+                                <label for="last_stop_price">Price:</label>
+                                <div class="invalid-feedback">
+                                    Value must be greater then or equal to 0!
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-2 g-3 align-items-center">
+                </div>
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <a type="button" class="btn btn-outline-gray" href="{{ back_btn }}"><i class="bi bi-door-open"></i>
+                        Back to admin panel</a>
+                    <button form="editformcon" type="submit" class="btn btn-success" onclick="startloading()" id="addconn"><i class="bi bi-check-lg"></i> Add Connection</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+
+{% endblock %}
+{% block js %}
+    <script>
+        var nmb = 2
+    </script>
+
+    <script src="{{ url_for('static', filename='js/add_con.js') }}"></script>
+
+{% endblock %}

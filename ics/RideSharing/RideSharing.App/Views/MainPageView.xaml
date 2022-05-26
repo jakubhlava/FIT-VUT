@@ -1,0 +1,79 @@
+﻿<Page
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:RideSharing.App.Views"
+      xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" x:Class="RideSharing.App.Views.MainPageView"
+      xmlns:views="clr-namespace:RideSharing.App.Views"
+      xmlns:viewModels="clr-namespace:RideSharing.App.ViewModels"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="MainPageView"
+      d:DataContext="{d:DesignInstance viewModels:MainPageViewModel}">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="20*" />
+            <ColumnDefinition Width="80*" />
+        </Grid.ColumnDefinitions>
+        <Rectangle Grid.Row="0" Fill="#424446" StrokeThickness="0"/>
+        <StackPanel Grid.Row="0" Grid.Column="0" Margin="5 0 5 0" >
+            <TextBlock Margin="0 15 0 5" HorizontalAlignment="Center" FontSize="38">
+                <TextBlock.Effect>
+                    <DropShadowEffect/>
+                </TextBlock.Effect><Bold Foreground="DarkOrange"><Run Text="Jízdo"/></Bold><Bold Foreground="Black"><Run Text="Sdíleč"/></Bold></TextBlock>
+            <Ellipse Height="100" Width="100" Margin="0 5 0 5" >
+                <Ellipse.Fill>
+                    <ImageBrush ImageSource="{Binding User.UserImg}" Stretch="UniformToFill"></ImageBrush>
+                </Ellipse.Fill>
+            </Ellipse>
+            <Button Margin="5 -20 0 0" Content="⚙" Width="25" Height="25" Background="Honeydew" Foreground="Black" Command="{Binding UserEditCommand}">
+                <Button.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="CornerRadius" Value="20"/>
+                    </Style>
+                </Button.Resources>
+            </Button>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <TextBlock Margin="0 5 0 5" Text="{Binding User.Name}" FontSize="22" VerticalAlignment="Top" TextAlignment="Center"/>
+                <TextBlock Margin="5 5 0 10" Text="{Binding User.Surname}" FontSize="22" FontWeight="Bold" VerticalAlignment="Top" TextAlignment="Center"/>
+            </StackPanel>
+            <Separator BorderBrush="DimGray" Margin="5 0 5 15"/>
+            <Button HorizontalContentAlignment="Stretch" VerticalAlignment="Top" Height="40" Background="Transparent" BorderThickness="0"
+                    Command="{Binding FindRideCommand}">
+                <TextBlock Text="Vyhledat jízdu" HorizontalAlignment="Center" FontSize="20" Foreground="DarkOrange" FontWeight="Bold"/>
+            </Button>
+            <Button HorizontalContentAlignment="Stretch" VerticalAlignment="Top" Height="40" Background="Transparent" BorderThickness="0"
+                    Command="{Binding CreateRideCommand}">
+                <TextBlock Text="Jsem řidič" HorizontalAlignment="Center" FontSize="20" Foreground="DarkOrange" FontWeight="Bold"/>
+            </Button>
+            <Button HorizontalContentAlignment="Stretch" Margin="0,0,0,0" VerticalAlignment="Top" Height="40" Background="Transparent" BorderThickness="0"
+                    Command="{Binding MyCarsCommand}">
+                <TextBlock Text="Auta" HorizontalAlignment="Center" FontSize="20" Foreground="DarkOrange" FontWeight="Bold"/>
+            </Button>
+            <Button HorizontalContentAlignment="Stretch" Margin="0,0,0,0" VerticalAlignment="Top" Height="40" Background="Transparent" BorderThickness="0"
+                    Command="{Binding CreateCarCommand}">
+                <TextBlock Text="Přidat auto" HorizontalAlignment="Center" FontSize="20" Foreground="DarkOrange" FontWeight="Bold"/>
+            </Button>
+            <Button HorizontalContentAlignment="Stretch" Margin="0,0,0,0" VerticalAlignment="Top"  Height="40" Background="Transparent" BorderThickness="0"
+                    Command="{Binding DriverRidesCommand}">
+                <TextBlock Text="Moje jízdy" HorizontalAlignment="Center" FontSize="20" Foreground="DarkOrange" FontWeight="Bold"></TextBlock>
+            </Button>
+            <Button HorizontalContentAlignment="Stretch" Margin="0,0,0,0" VerticalAlignment="Top"  Height="40"  Background="Transparent" BorderThickness="0"
+                    Command="{Binding SharedRidesCommand}">
+                <TextBlock Text="Spolujízdy" HorizontalAlignment="Center" FontSize="20" Foreground="DarkOrange" FontWeight="Bold"/>
+            </Button>
+            <Button HorizontalContentAlignment="Stretch" Margin="0,0,0,0" VerticalAlignment="Top"  Height="40" Background="Transparent" BorderThickness="0"
+                    Command="{Binding CreateUserCommand}">
+                <TextBlock Text="Vytvořit uživatele" HorizontalAlignment="Center" FontSize="20" Foreground="DarkOrange" FontWeight="Bold"/>
+            </Button>
+            <Button HorizontalContentAlignment="Stretch" Margin="0,0,0,0" VerticalAlignment="Top"  Height="40" Background="Transparent" BorderThickness="0"
+                    Command="{Binding LogoutCommand}">
+                <TextBlock Text="Odhlásit se" HorizontalAlignment="Center" FontSize="18" Foreground="#B40000" FontWeight="Bold"/>
+            </Button>
+
+        </StackPanel>
+        <ContentPresenter Grid.Row="0" Grid.Column="1" Content="{Binding CurrentView}"></ContentPresenter>
+    </Grid>
+</Page>

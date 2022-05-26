@@ -1,0 +1,43 @@
+<!--
+    Navbar snippet
+    Vytvořil: Jan Kleis (xkleis00)
+-->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark d-flex flex-lg-row flex-column">
+    <div class="container-fluid ">
+        <div class="navbar-brand d-lg-none d-block fs-3 text-light">Anki Reborn</div>
+        <button class="navbar-toggler ms-auto me-2" data-bs-toggle="collapse" data-bs-target="#navMenu"><span class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse justify-content-lg-between" id="navMenu">
+            <div class="navbar-brand d-none d-lg-block fs-3 text-light">Anki Reborn</div>
+            <ul class="navbar-nav">
+                <li class="nav-item mx-2">
+                    <a href="{{url_for('index.main_page')}}" class="nav-link d-flex flex-lg-column flex-row-reverse justify-content-lg-center justify-content-start align-items-center"><span class="material-icons mx-1">home</span>Domů</a>
+                </li>
+                <li class="nav-item dropdown mx-2">
+                    <a href="#" role="button" data-bs-toggle="dropdown" class="nav-link d-flex flex-lg-column flex-row-reverse justify-content-lg-center justify-content-start  align-items-center"><span class="material-icons mx-1">school</span>Studovat</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{{ url_for('index.my_decks') }}" class="dropdown-item">Moje balíčky</a></li>
+                        <li><a href="{{ url_for('packages.main') }}" class="dropdown-item">Objevovat</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown mx-2">
+                    <a href="#" role="button" data-bs-toggle="dropdown" class="nav-link d-flex flex-lg-column flex-row-reverse justify-content-lg-center justify-content-start  align-items-center"><span class="material-icons mx-1">history_edu</span>Tvořit</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{{ url_for('index.my_decks') }}" class="dropdown-item">Moje balíčky</a></li>
+                        <li><a href="{{ url_for('builder.create') }}" class="dropdown-item">Vytvořit balíček</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <ul class="navbar-nav align-items-center">
+                <li class="nav-item mx-2">
+                    <span class="nav-text text-muted">
+                            Ahoj, {{ current_user.user_data.username }}
+                    </span>
+                </li>
+                <li class="nav-item mx-2">
+
+                    <a href="{{url_for('index.logout')}}" class="nav-link d-flex flex-lg-column flex-row-reverse justify-content-lg-center justify-content-start  align-items-center"><span class="material-icons mx-1">logout</span>Odejít</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

@@ -1,0 +1,39 @@
+{#
+    Vyhledávač
+    Vytvořil: Jakub Hlava (xhlava52)
+#}
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <div class="row py-2 my-2">
+        <div class="card p-2 mb-2">
+            <div class="card-body">
+                <div>
+                    <input type="text" class="form-control bg-secondary text-light input-lg" placeholder="Zadejte hledaný výraz..." id="searchBar" oninput="search()">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row py-2 my-2">
+        <div class="card p-2 mb-2">
+            <div class="card-body" id="searchResults">
+                <span class="text-muted">Po zadání dotazu do políčka nahoře se zde zobrazí výsledky hledání...</span>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex flex-row justify-content-center">
+        <div id="pagination"></div>
+    </div>
+</div>
+{% endblock %}
+{% block js %}
+    <script>
+        const start_base = "{{ url_for('question.main', find_code='') }}";
+        const search_endpoint = "{{ url_for('packages.search') }}";
+        const categories_endpoint = "{{ url_for('packages.get_categories') }}";
+        const add_category_endpoint = "{{ url_for('packages.add_to_category') }}";
+        const add_fav_endpoint = "{{ url_for('packages.add_fav') }}";
+        const del_fav_endpoint = "{{ url_for('packages.del_fav') }}";
+    </script>
+    <script src="{{ url_for('static', filename='js/search.js') }}"></script>
+{% endblock %}

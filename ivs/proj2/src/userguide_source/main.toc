@@ -1,0 +1,13 @@
+\babel@toc {czech}{}
+\contentsline {section}{\numberline {1}Instalace a odinstalace}{2}
+\contentsline {subsection}{\numberline {1.1}Automaticky}{2}
+\contentsline {subsubsection}{\numberline {1.1.1}Instalace}{2}
+\contentsline {subsubsection}{\numberline {1.1.2}Odinstalace}{2}
+\contentsline {subsection}{\numberline {1.2}Manu\IeC {\'a}ln\IeC {\v e}}{2}
+\contentsline {subsubsection}{\numberline {1.2.1}Instalace ze zdrojov\IeC {\'y}ch k\IeC {\'o}d\IeC {\r u}}{2}
+\contentsline {subsubsection}{\numberline {1.2.2}Instalace z PIP bal\IeC {\'\i }\IeC {\v c}ku}{3}
+\contentsline {subsubsection}{\numberline {1.2.3}Odinstalace PIP bal\IeC {\'\i }\IeC {\v c}ku}{3}
+\contentsline {subsection}{\numberline {1.3}Mo\IeC {\v z}n\IeC {\'e} probl\IeC {\'e}my p\IeC {\v r}i instalaci}{3}
+\contentsline {section}{\numberline {2}Ovl\IeC {\'a}d\IeC {\'a}n\IeC {\'\i } pomoc\IeC {\'\i } kl\IeC {\'a}vesnice}{3}
+\contentsline {section}{\numberline {3}Funkce}{4}
+\contentsline {section}{\numberline {4}P\IeC {\v r}evodn\IeC {\'\i }k m\IeC {\v e}n}{5}

@@ -1,0 +1,44 @@
+<project>
+    <property name="classpath" location="lib/gson-2.8.6.jar"/>
+
+    <target name="clean">
+        <delete dir="build/"/>
+        <delete dir="dest/"/>
+    </target>
+
+    <target name="makedir" depends="clean">
+        <mkdir dir="build"/>
+        <mkdir dir="dest"/>
+    </target>
+
+    <target name="compile" depends="makedir">
+        <javac srcdir="src" destdir="build" classpath="${classpath}" includeantruntime="false" encoding="utf-8"/>
+        <jar destfile="dest/ija-app.jar" basedir="build">
+            <fileset dir="build" includes="**/*.class" />
+            <zipgroupfileset dir="lib" includes="gson-2.8.6.jar" />
+            <manifest>
+                <attribute name="main-Class" value="kubaDemo"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="run" depends="compile">
+        <java jar="dest/ija-app.jar" fork="true"/>
+    </target>
+
+    <target name="cleanDoc">
+        <delete dir="doc/"/>
+    </target>
+
+    <target name="makedirDoc" depends="cleanDoc">
+        <mkdir dir="doc/"/>
+    </target>
+
+    <target name="doc" depends="makedirDoc, compile">
+        <javadoc packagenames="src" sourcepath="src" destdir="doc" classpath="${classpath}" encoding="utf-8">
+            <fileset dir="src">
+                <include name="**"/>
+            </fileset>
+        </javadoc>
+    </target>
+</project>

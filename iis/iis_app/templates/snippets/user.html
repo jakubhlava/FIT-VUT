@@ -1,0 +1,80 @@
+{% if current_user.is_authenticated %}
+
+{% if current_user.role == "admin" %}
+<span class="navbar-text me-2">Hello,
+    {% if current_user.full_name %}
+    {{ current_user.full_name }}!
+    {% else %}
+    user {{ current_user.username }}!
+    {% endif %}
+</span>
+<li class="nav-item">
+    <a href="{{ url_for('admin.main_page') }}" class="nav-link"><i class="bi bi-gear"></i>
+        Administration
+    </a>
+</li>
+{% elif current_user.role == "carrier" %}
+<li class="nav-item dropdown">
+    <a href="#" class="nav-link dropdown-toggle" id="carrierNav" data-bs-toggle="dropdown">
+        <i class="bi bi-person-circle"></i>
+        <span class="navbar-text ms-0 me-2">Hello,
+            {% if current_user.full_name %}
+            {{ current_user.full_name }}!
+            {% else %}
+            user {{ current_user.username }}!
+            {% endif %}
+        </span>
+        <i class="bi bi-chevron-down"></i>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end " aria-labelledby="carrierNav">
+        <li><a class="dropdown-item" href="{{ url_for('carrier.manage_connections_page') }}">Manage Connections</a></li>
+        <li><a class="dropdown-item" href="{{ url_for('carrier.manage_stops_page') }}">Manage Stops</a></li>
+        <li><a class="dropdown-item" href="{{ url_for('carrier.manage_vehicles_page') }}">Manage Vehicles</a></li>
+        <li><a class="dropdown-item" href="{{ url_for('carrier.manage_personnel_page') }}">Manage Personnel Accounts</a>
+        </li>
+    </ul>
+</li>
+{% elif current_user.role == "personnel" %}
+<li class="nav-item dropdown">
+    <a href="#" class="nav-link dropdown-toggle" id="personnelNav" role="button" data-bs-toggle="dropdown">
+        <i class="bi bi-person-circle"></i>
+        <span class="navbar-text ms-0 me-2">Hello,
+            {% if current_user.full_name %}
+            {{ current_user.full_name }}!
+            {% else %}
+            user {{ current_user.username }}!
+            {% endif %}
+        </span>
+        <i class="bi bi-chevron-down"></i>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="personnelNav">
+        <li><a href="{{ url_for('personnel.update_position_page') }}" class="dropdown-item">Update Vehicle Position</a></li>
+        <li><a href="{{ url_for('personnel.manage_reservations_page') }}" class="dropdown-item">Manage Reservations</a>
+        </li>
+    </ul>
+</li>
+{% elif current_user.role == "user" %}
+<span class="navbar-text ms-0 me-2">Hello,
+    {% if current_user.full_name %}
+    {{ current_user.full_name }}!
+    {% else %}
+    user {{ current_user.username }}!
+    {% endif %}
+</span>
+{% endif %}
+
+<li class="nav-item">
+    <a href="{{url_for('reservation.my_reservations_page')}}" class="nav-link">My reservations</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link m-0" href="{{ url_for('main_page.logout') }}"><i class="bi bi-door-open"></i>Logout</a>
+</li>
+
+{% else %}
+<li class="nav-item">
+    <a class="nav-link" href="{{ url_for('main_page.login_page') }}">Login</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link" href="{{ url_for('main_page.signup_page') }}">Sign&nbsp;Up</a>
+</li>
+{% endif %}

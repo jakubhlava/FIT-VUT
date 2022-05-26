@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+{% block title %}Add Personnel{% endblock %}
+
+{% block navbar_right %}
+{% endblock %}
+
+{% block content %}
+<h4 class="p-3">Add Personnel Account</h4>
+<div class="bg-light p-2 m-3">
+    <div id="edit_user_form">
+
+        <form class="p-3 needs-validation" action="{{ url_for('carrier.add_personnel_page') }}" method="POST">
+
+            <div class="row mb-2 g-3 align-items-center">
+                <div class="col-sm-2">
+                  <label for="edit_username" class="col-form-label">Username:</label>
+                </div>
+                <div class="col">
+                  <input type="text" id="edit_username" name="username" class="form-control" required
+                  value="{% if username is defined and username != None %}{{ username }}{% endif %}">
+                    <div class="invalid-feedback">
+                        Please fill username.
+                    </div>
+                </div>
+                <div class="col">
+                  <span id="username_HelpInline" class="form-text">
+                      <i>Required</i>
+                  </span>
+                </div>
+            </div>
+
+            <div class="row mb-2 g-3 align-items-center">
+                <div class="col-sm-2">
+                  <label for="edit_fullname" class="col-form-label">Full name:</label>
+                </div>
+                <div class="col">
+                  <input type="type" name="fullname" id="edit_fullname" class="form-control"
+                  value="{% if full_name is defined and full_name != None %}{{ full_name }}{% endif %}">
+                </div>
+                <div class="col">
+                  <span id="passwordHelpInline" class="form-text">
+
+                  </span>
+                </div>
+            </div>
+
+
+            <div class="row mb-2 g-3 align-items-center">
+                <div class="col-sm-2">
+                  <label for="edit_phone" class="col-form-label">Phone:</label>
+                </div>
+                <div class="col">
+                  <input type="type" id="edit_phone" name="phone" class="form-control"
+                  value="{% if phone is defined and phone != None %}{{ phone }}{% endif %}">
+                </div>
+                <div class="col">
+                  <span id="edit_role" class="form-text">
+                        Use +420 xxxxxxxxx format please.
+                  </span>
+                </div>
+            </div>
+
+            <div class="row mb-2 g-3 align-items-center">
+                <div class="col-sm-2">
+                  <label for="edit_email" class="col-form-label">Email:</label>
+                </div>
+                <div class="col">
+                  <input type="type" id="edit_email" name="email" class="form-control"  required
+                         value="{% if email is defined and email != None %}{{ email }}{% endif %}">
+                    <div class="invalid-feedback">
+                        Please fill email.
+                    </div>
+                </div>
+                <div class="col">
+                  <span id="edit_role" class="form-text">
+                    <i>Required</i>
+                  </span>
+                </div>
+            </div>
+
+
+            <div class="row mb-2 g-3 align-items-center">
+                <div class="col-sm-2">
+                  <label for="repeatPassword" class="col-form-label">Password:</label>
+                </div>
+                <div class="col">
+                  <input type="password" id="inputPassword" name="password" class="form-control" aria-describedby="passwordHelpInline" oninput="checkPw(this, 'repeatPassword')" required>
+                    <div class="invalid-feedback">
+                        Password has to be filled and both passwords have to match!
+                    </div>
+                </div>
+
+                <div class="col">
+                  <span id="passwordHelpInline" class="form-text">
+                    <i>Required</i>
+                  </span>
+                </div>
+            </div>
+            <div class="row mb-2 g-3 align-items-center">
+                <div class="col-sm-2">
+                  <label for="inputPassword6" class="col-form-label">Repeat password:</label>
+                </div>
+                <div class="col">
+                  <input type="password" id="repeatPassword" class="form-control" aria-describedby="passwordHelpInline" oninput="checkPw(this, 'inputPassword')" required>
+                    <div class="invalid-feedback">
+                        Password has to be filled and both passwords have to match!
+                    </div>
+                </div>
+                <div class="col">
+                  <span id="passwordHelpInline" class="form-text">
+                    <i>Required</i>
+                  </span>
+                </div>
+            </div>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <a type="button" class="btn btn-outline-gray" href="{{ url_for('carrier.manage_personnel_page') }}"><i class="bi bi-door-open"></i> Back to admin panel</a>
+                <button type="submit" class="btn btn-success"><i class="bi bi-check-lg"></i> Create new user</button>
+            </div>
+        </form>
+    </div>
+
+
+</div>
+{% endblock %}
+{% block js %}
+    <script src="{{ url_for('static', filename='js/password_verifier.js') }}"></script>
+{% endblock %}

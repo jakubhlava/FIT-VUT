@@ -1,0 +1,25 @@
+/*!
+ \mainpage Hlavní stránka
+Vítejte v dokumentaci Alp(h)acalcu!
+
+@par Obsah
+<div class="contents">
+</li><li><a href="namespaces.html"><span>Balíky</span></a>
+<ul><li><a href="namespaces.html"><span>Balíky</span></a>
+</li><li><a href="namespacemembers.html"><span>Funkce balíku</span></a>
+</li></ul>
+</li><li><a href="annotated.html"><span>Třídy</span></a>
+<ul><li><a href="annotated.html"><span>Seznam tříd</span></a>
+</li><li><a href="classes.html"><span>Rejstřík tříd</span></a>
+</li><li><a href="hierarchy.html"><span>Hierarchie tříd</span></a>
+</li><li><a href="functions.html"><span>Seznam tříd</span></a>
+</li></ul>
+</li><li><a href="files.html"><span>Soubory</span></a>
+<ul><li><a href="files.html"><span>Seznam souborů</span></a>
+</li></ul>
+<br>
+ * <div style="float:left">
+ * \image html icon/kalkulacka.png
+ * </div>
+ * <div style="clear: both"></div>
+*/

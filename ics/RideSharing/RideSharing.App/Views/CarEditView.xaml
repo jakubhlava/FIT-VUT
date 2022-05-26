@@ -1,0 +1,93 @@
+﻿<UserControl x:Class="RideSharing.App.Views.CarEditView"
+            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:RideSharing.App.Views"
+             xmlns:viewModels="clr-namespace:RideSharing.App.ViewModels"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             d:DataContext="{d:DesignInstance viewModels:MyCarsEditViewModel}">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="75*"></ColumnDefinition>
+            <ColumnDefinition Width="25*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Border Padding="10" Grid.Column="0">
+            <StackPanel>
+                <Label FontWeight="Bold" FontSize="24" Foreground="Black" HorizontalAlignment="Left">Značka</Label>
+                <TextBox  Height="35" Foreground="Black" FontSize="25" Margin="5 0 5 0" Text="{Binding NewCar.Brand}">
+                    <TextBox.Resources>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="CornerRadius" Value="5"/>
+                        </Style>
+                    </TextBox.Resources>
+                </TextBox>
+                <Label FontWeight="Bold" FontSize="24" Foreground="Black" HorizontalAlignment="Left">Model</Label>
+                <TextBox  Height="35" Foreground="Black" FontSize="25" Margin="5 0 5 0" Text="{Binding NewCar.Model}">
+                    <TextBox.Resources>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="CornerRadius" Value="5"/>
+                        </Style>
+                    </TextBox.Resources>
+                </TextBox>
+                <Label FontWeight="Bold" FontSize="24" Foreground="Black" HorizontalAlignment="Left">Typ</Label>
+                <TextBox  Height="35" Foreground="Black" FontSize="25" Margin="5 0 5 0" Text="{Binding NewCar.Type}">
+                    <TextBox.Resources>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="CornerRadius" Value="5"/>
+                        </Style>
+                    </TextBox.Resources>
+                </TextBox>
+                        <Label FontWeight="Bold" FontSize="24" Foreground="Black" HorizontalAlignment="Left">Datum registrace</Label>
+                        <xctk:DateTimePicker ShowButtonSpinner="False" Background="Gray" Grid.Column="2" Height="33" HorizontalAlignment="Left" x:Name="DateTimePicker1" Width="211" RenderTransformOrigin="2.263,-6.405" Margin="5,0,0,0"  Value="{Binding NewCar.RegistrationDate}"/>
+                        <Label FontWeight="Bold" FontSize="24" Foreground="Black" HorizontalAlignment="Left">Počet míst</Label>
+                        <xctk:IntegerUpDown HorizontalAlignment="Left" Background="Gray" Height="35" Foreground="Black" FontSize="25" Value="0" Minimum="0" Margin="5 0 5 0" Text="{Binding NewCar.SeatsCount}" Width="72"></xctk:IntegerUpDown>
+                <Label FontWeight="Bold" FontSize="24" Foreground="Black" HorizontalAlignment="Left">URL fotky auta</Label>
+                <TextBox  Height="35" Foreground="Black" FontSize="18" Margin="5 0 5 0" Text="{Binding NewCar.Img}">
+                    <TextBox.Resources>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="CornerRadius" Value="5"/>
+                        </Style>
+                    </TextBox.Resources>
+                </TextBox>
+                <Label FontWeight="Bold" FontSize="24" Foreground="Black" HorizontalAlignment="Left">Poznámka</Label>
+                <TextBox  Height="70" Foreground="Black" FontSize="25" Margin="5 0 5 0" Text="{Binding NewCar.Note}">
+                    <TextBox.Resources>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="CornerRadius" Value="5"/>
+                        </Style>
+                    </TextBox.Resources>
+                </TextBox>
+                <StackPanel  Orientation="Horizontal" HorizontalAlignment="Right" >
+                    <Button Background="Transparent" Height="45" FontSize="32" Foreground="#C90000" Width="120" FontWeight="Bold" HorizontalAlignment="Right" Margin="0 10 5 10" Content="Smazat auto"
+                            Command="{Binding DeleteCarCommand}">
+                        <Button.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="CornerRadius" Value="5"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
+
+                    <Button Background="Transparent" Height="45" FontSize="32" Foreground="Orange" Width="120" FontWeight="Bold" HorizontalAlignment="Right" Margin="0 10 5 10" 
+                            Command="{Binding SaveCommand}">
+                            Uložit
+                            <Button.Resources>
+                                <Style TargetType="{x:Type Border}">
+                                    <Setter Property="CornerRadius" Value="5"/>
+                                </Style>
+                            </Button.Resources>
+                        </Button>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+        <Border Grid.Column="1" Padding="10">
+            <Ellipse VerticalAlignment="Top" Height="{Binding ActualWidth, RelativeSource={RelativeSource Self}}" Margin="0 5 0 5" >
+                <Ellipse.Fill>
+                    <ImageBrush ImageSource="{Binding NewCar.Img}" Stretch="UniformToFill"></ImageBrush>
+                </Ellipse.Fill>
+            </Ellipse>
+        </Border>
+    </Grid>
+</UserControl>

@@ -1,0 +1,288 @@
+{#
+    Pohled na balíčky navázané k uživateli
+    Vytvořil: Lukáš Kraus (xkraus13)
+#}
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container-fluid">
+<div class="row">
+{% if favs is not none %}
+    <div class="row my-2">   
+        <div class="title" style="color:rgba(159,64,54,255);">
+            <h2>Oblíbené</h2>
+        </div>
+    </div>        
+    
+    {% for fav in favs %}
+            
+                <div class="col-md-3 p-3" style="min-width: 26rem; max-width: 32rem;">
+                    <div class="card text-center w-100 p-4 border-danger" style="min-width: 25rem; max-width: 35rem; min-height: 15rem; max-height: 17rem; border-radius: 15px 50px;" >
+                        <div class="card-body">
+                            <h3 class="card-title"> {{ fav['name'] }} </h3>
+                            <p class="card-subtitle p-2" style="color: rgb(95, 95, 95);">{{ fav['find_code'] }} </p>
+                        </div>
+
+                        <div class="card-footer bg-dark">                         
+                         
+                                <a class="btn btn-primary btn-lg" role="button" data-bs-toggle="dropdown"><span class="material-icons">play_arrow</span></a>
+                                <ul class="dropdown-menu">  
+                                    <li>
+                                        <a class="dropdown-item" href="{{url_for('question.main', find_code=fav['find_code'], continue='no')}}">Začít</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="{{url_for('question.main', find_code=fav['find_code'], continue='yes')}}">Pokračovat</a> 
+                                    </li>
+                                </ul>
+                            
+                            {% if fav['my_deck'] == "yes" %}
+                                
+                                <a href="{{url_for("builder.edit", find_code=fav['find_code'])}}" class="btn btn-primary btn-lg"><span class="material-icons">edit</span></a>
+
+                            {% endif %}
+
+                            <a href="{{url_for("index.my_decks", find_code=fav['_id'], code=1)}}" class="btn btn-primary btn-lg"><span class="material-icons">favorite</span></a>
+                           
+                            <a class="btn btn-primary btn-lg" role="button" data-bs-toggle="dropdown">Kategorie</a> 
+                            <ul class="dropdown-menu"> 
+                                <li>
+                                    <form action="{{url_for('index.my_decks', code = 6)}}" method="POST">
+                                        <div class="input-group mb-3">
+                                            <input type="text" class="form-control" placeholder="Vytvořit kategorii" name="add_cat_name" required style="background-color: #333333; color:white">
+                                            <button class="btn btn-outline-warning" type="submit" id="button-addon2">Přidat</button>
+                                          </div>
+                                    </form>
+                                </li>
+                             {% for test in fav['categories'] %}   
+                            <li>
+                                        <a>{{ test['name'] }}   
+                                    {% if test['presence'] %} 
+                                        <a href="{{url_for('index.my_decks', find_code=fav['_id'], category_id=test['_id'], code=3)}}">
+                                            <span class="material-icons">done</span>
+                                        </a>
+
+                                    {% else %}
+
+                                        <a href="{{url_for('index.my_decks', find_code=fav['_id'], category_id=test['_id'], code=4)}}">
+                                            <span class="material-icons ">add</span>
+                                        </a>
+
+                                    {% endif %}
+                                    <a href="{{url_for('index.my_decks', find_code=fav['_id'], category_id=test['_id'], code=5)}}">
+                                            <span style="float: right" class="material-icons">close</span>
+                                    </a>
+                                </a> 
+                                </li>
+                            
+                            {% endfor %}
+                            </ul>
+
+                        </div>
+                    </div>
+                </div> 
+                
+
+            {% endfor %}
+        {% endif %}  
+        
+        
+        {% if owns is not none %}
+            <div class="row my-2">   
+                <div class="title" style="color: #3283b9;">
+                    <h2>Moje balíčky</h2>
+                </div>
+            </div>             
+        {% for own in owns %}
+        
+        <div class="col-md-3 p-3" style="min-width: 26rem; max-width: 32rem;">
+                        <div class="card text-center w-100 p-4 border-info" style="min-width: 25rem; max-width: 35rem; min-height: 15rem; max-height: 17rem; border-radius: 15px 50px;" >
+                            <div class="card-body">
+                                <h3 class="card-title"> {{ own['name'] }} </h3>
+                                <p class="card-subtitle p-2" style="color: rgb(95, 95, 95);">{{ own['find_code'] }} </p>
+                            </div>
+    
+                            <div class="card-footer bg-dark">
+                                <a class="btn btn-primary btn-lg" role="button" data-bs-toggle="dropdown"><span class="material-icons">play_arrow</span></a>
+                                <ul class="dropdown-menu">  
+                                    <li>
+                                        <a class="dropdown-item" href="{{url_for('question.main', find_code=own['find_code'], continue='no')}}">Začít</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="{{url_for('question.main', find_code=own['find_code'], continue='yes')}}">Pokračovat</a> 
+                                    </li>
+                                </ul>
+
+                            <a href="{{url_for("builder.edit", find_code=own['find_code'])}}" class="btn btn-primary btn-lg"><span class="material-icons">edit</span></a>
+                                    {% if own['is_fav'] == 'no' %}
+
+                                        <a href="{{url_for("index.my_decks", find_code=own['_id'], code=2)}}" class="btn btn-primary btn-lg"><span class="material-icons">favorite_border</span></a>
+
+                                    {% else %}
+
+                                        <a href="{{url_for("index.my_decks", find_code=own['_id'], code=1)}}" class="btn btn-primary btn-lg"><span class="material-icons">favorite</span></a>
+                                    
+                                    {% endif %}
+
+                                    <a class="btn btn-primary btn-lg" role="button" data-bs-toggle="dropdown">Kategorie</a> 
+                                    <ul class="dropdown-menu"> 
+                                        <li>
+                                            <form action="{{url_for('index.my_decks', code = 6)}}" method="POST">
+                                                <div class="input-group mb-3">
+                                                    <input type="text" class="form-control" placeholder="Vytvořit kategorii" name="add_cat_name" required style="background-color: #333333; color:white">
+                                                    <button class="btn btn-outline-warning" type="submit" id="button-addon2">Přidat</button>
+                                                  </div>
+                                            </form>
+                                        </li>
+                                     {% for test in own['categories'] %}   
+                                     <li>
+                                               <a>{{ test['name'] }}   
+                                            {% if test['presence'] %} 
+                                                <a href="{{url_for('index.my_decks', find_code=own['_id'], category_id=test['_id'], code=3)}}">
+                                                    <span class="material-icons">done</span>
+                                                </a>
+        
+                                            {% else %}
+        
+                                                <a href="{{url_for('index.my_decks', find_code=own['_id'], category_id=test['_id'], code=4)}}">
+                                                    <span class="material-icons ">add</span>
+                                                </a>
+        
+                                            {% endif %}
+                                            <a href="{{url_for('index.my_decks', find_code=own['_id'], category_id=test['_id'], code=5)}}">
+                                                    <span style="float: right" class="material-icons">close</span>
+                                            </a>
+                                        </a> 
+                                        </li>
+                                    
+                                    {% endfor %}
+                                    </ul>
+                                
+                            </div>
+                        </div>
+                    </div> 
+                    
+    
+                {% endfor %}
+            {% endif %} 
+
+
+ {% if cats is not none %}              
+        {% for cat in cats %}   
+            <div class="row my-2">   
+                <div class="title" style="color:rgba(0, 188, 140, 255);">
+                    <h2>{{ cat['name'] }}</h2>
+                </div>
+            </div> 
+            {% for deck in cat['decks'] %} 
+                <div class="col-md-3 p-3" style="min-width: 26rem; max-width: 32rem;">
+                    <div class="card text-center w-100 p-4 border-success" style="min-width: 25rem; max-width: 35rem; min-height: 15rem; max-height: 17rem; border-radius: 15px 50px;" >
+                        <div class="card-body">
+                            <h3 class="card-title"> {{ deck['name'] }} </h3>
+                            <p class="card-subtitle p-2" style="color: rgb(95, 95, 95);">{{ deck['find_code'] }} </p>
+                        </div>
+
+                        <div class="card-footer bg-dark">
+                            <a class="btn btn-primary btn-lg" role="button" data-bs-toggle="dropdown"><span class="material-icons">play_arrow</span></a>
+                                <ul class="dropdown-menu">  
+                                    <li>
+                                        <a class="dropdown-item" href="{{url_for('question.main', find_code=deck['find_code'], continue='no')}}">Začít</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="{{url_for('question.main', find_code=deck['find_code'], continue='yes')}}">Pokračovat</a> 
+                                    </li>
+                                </ul>
+                            
+                            {% if deck['my_deck'] == "yes" %}
+                                
+                                <a href="{{url_for("builder.edit", find_code=deck['find_code'])}}" class="btn btn-primary btn-lg"><span class="material-icons">edit</span></a>
+
+                            {% endif %}
+                            
+                            {% if deck['is_fav'] == 'no' %}
+
+                                <a href="{{url_for("index.my_decks", find_code=deck['_id'], code=2)}}" class="btn btn-primary btn-lg"><span class="material-icons">favorite_border</span></a>
+
+                            {% else %}
+
+                                <a href="{{url_for("index.my_decks", find_code=deck['_id'], code=1)}}" class="btn btn-primary btn-lg"><span class="material-icons">favorite</span></a>
+                            
+                            {% endif %}
+
+
+
+                            <a class="btn btn-primary btn-lg" role="button" data-bs-toggle="dropdown">Kategorie</a>
+                            <ul class="dropdown-menu"> 
+                                <li>
+                                    <form action="{{url_for('index.my_decks', code = 6)}}" method="POST">
+                                        <div class="input-group mb-3">
+                                            <input type="text" class="form-control" placeholder="Vytvořit kategorii" name="add_cat_name" required style="background-color: #333333; color:white">
+                                            <button class="btn btn-outline-warning" type="submit" id="button-addon2">Přidat</button>
+                                          </div>
+                                    </form>
+                                </li>
+                             {% for test in deck['categories'] %}   
+                             
+                             <li>
+                                <a>{{ test['name'] }}   
+                             {% if test['presence'] %} 
+                                 <a href="{{url_for('index.my_decks', find_code=deck['_id'], category_id=test['_id'], code=3)}}">
+                                     <span class="material-icons">done</span>
+                                 </a>
+
+                             {% else %}
+
+                                 <a href="{{url_for('index.my_decks', find_code=deck['_id'], category_id=test['_id'], code=4)}}">
+                                     <span class="material-icons ">add</span>
+                                 </a>
+
+                             {% endif %}
+                             <a href="{{url_for('index.my_decks', find_code=deck['_id'], category_id=test['_id'], code=5)}}">
+                                     <span style="float: right" class="material-icons">close</span>
+                             </a>
+                         </a> 
+                         </li>
+                            
+                            {% endfor %}
+                            </ul>
+
+
+
+
+
+
+
+
+
+
+
+                        </div>
+                    </div>
+                </div> 
+                
+                {% endfor %}
+            {% endfor %}
+        </div>
+    </div>
+     {% else %}
+    </div>
+</div>
+     
+    <a class="btn btn-lg btn-outline-success" href="{{url_for("packages.main")}}" role="button" data-bs-toggle="dropdown">
+        Přidat kategorii <span class="material-icons" style="font-size: 20px;" href="{{url_for('index.my_decks', code = 6)}}">add</span>
+    </a> 
+    <ul class="dropdown-menu"> 
+        <li>
+            <form action="{{url_for('index.my_decks', code = 6)}}" method="POST">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="Vytvořit kategorii" name="add_cat_name" required style="background-color: #333333; color:white">
+                    <button class="btn btn-outline-warning" id="button-addon2" >Přidat</button>
+                  </div>
+            </form>
+        </li>
+    </ul>
+
+
+
+
+     {% endif %} 
+{% endblock %}

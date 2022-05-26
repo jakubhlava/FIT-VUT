@@ -1,0 +1,102 @@
+{#
+    Registrace nového uživatele
+    Vytvořil: Lukáš Kraus (xkraus13)
+#}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anki Reborn</title>
+  <!-- link rel="stylesheet" href="{{url_for('static',filename='css/main.css')}}"-->
+  {% include "snippets/css.html" %}
+</head>
+
+<body>
+<div class="container">
+    <div class="d-lg-flex d-block align-items-center justify-content-between mx-4 vh-100">
+      <div class="text-center text-lg-start">
+          <h1 class="display-1 fw-bold">Anki&nbsp;Reborn</h1>
+          <h2 class="fs-2 fw-light text-muted">Co se nedá naučit za den, nedá se naučit vůbec.</h2>
+      </div>
+    <div class="card">
+
+      <!-- "Nadpis" -->
+
+      <form class="card-body p-4" action="{{ url_for('index.register') }}" method="POST", id="register_form">
+        <div class="card-title d-flex justify-content-end fs-3">
+          <h3 class="fw-bold">
+            Registrace
+          </h3>
+        </div>
+
+        <!-- Login část -->
+
+        <div class="row mb-4 align-items-center">
+          <div class="col-sm-3 col-12">
+            <label for="login" class="form-label">
+              Přihlašovací jméno
+            </label>
+          </div>
+          <div class="col">
+            <input class="form-control" type="text" placeholder="Uživatelské jméno" name="jmeno" required>
+          </div>
+        </div>
+
+        <!-- Password část -->
+
+        <div class="row mb-4 align-items-center">
+          <div class="col-sm-3 col-12">
+            <label for="password" class="form-label">
+              Heslo
+            </label>
+          </div>
+          <div class="col">
+            <input class="form-control" type="password" placeholder="Heslo" name="heslo1" required minlength="6">
+          </div>
+        </div>
+
+        <!-- 2. Password část -->
+
+        <div class="row mb-4 align-items-center">
+            <div class="col-sm-3 col-12">
+              <label for="password" class="form-label">
+                Zopakujte heslo
+              </label>
+            </div>
+            <div class="col">
+              <input class="form-control" type="password" placeholder="Heslo znovu" name="heslo2" required minlength="6">
+            </div>
+          </div>
+
+
+        <!-- Tlačítko přihlásit se -->
+
+      <div class="d-flex justify-content-center mb-4">
+          <button class="btn btn-primary">
+            Zaregistruj se
+          </button>
+      </div>
+      {% include "snippets/flash_handler.html" %}
+
+
+      {% block content %}
+      {% endblock %}
+      
+
+           <!--<div>Ještě nemáte účet? <a href="{{ url_for('index.register') }}">Zaregistrujte se!</a></div>-->
+           <div>Máš již účet? <a href="/">Přihlaš se!</a></div>
+  </form>
+  
+  </div>
+</div>
+
+</div>
+{% include "snippets/js.html" %}
+
+
+  
+
+</body>
+
+</html>

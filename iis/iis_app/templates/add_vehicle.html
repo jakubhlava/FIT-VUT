@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+{% block title %}Add Vehicle{% endblock %}
+
+{% block header %}
+
+{% endblock %}
+
+{% block navbar_right %}
+{% endblock %}
+
+
+{% block content %}
+
+    <h4 class="p-3">Add Vehicle</h4>
+    <div class="bg-light p-2 m-3">
+        <div id="add_stop_form">
+
+            <form class="p-3 needs-validation" action="{{ url_for('carrier.add_vehicle_page') }}" method="POST" id="editformstop">
+                {% if current_user.role == "admin" %}
+                <div class="row mb-2 g-3 align-items-center">
+                    <div class="col-sm-2">
+                      <label for="carrier" class="col-form-label">Carrier:</label>
+                    </div>
+                    <div class="col">
+                        <select name="carrier" id="carrier-select" class="form-select" required>
+                            <option selected>Please select carrier...</option>
+                            {% for c in carriers %}
+                                <option value="{{ c['user_id'] }}">{{ c['full_name'] }}</option>
+                            {% endfor %}
+                        </select>
+                        <div class="invalid-feedback">
+                             You have to pick a carrier!
+                        </div>
+                    </div>
+                    <div class="col">
+                        <span class="form-text">You are an <i>administrator</i>. You have to select carrier for new vehicle.</span>
+                    </div>
+                </div>
+                {% endif %}
+
+                <div class="row mb-2 g-3 align-items-center">
+                    <div class="col-sm-2">
+                      <label for="vehicle_name" class="col-form-label">Vehicle Name:</label>
+                    </div>
+                    <div class="col">
+                      <input type="text" id="vehicle_name" name="name" class="form-control" required>
+                        <div class="invalid-feedback">
+                             Give your vehicle some name!
+                        </div>
+                    </div>
+                    <div class="col">
+                    </div>
+                </div>
+
+                <div class="row mb-2 g-3 align-items-center">
+                    <div class="col-sm-2">
+                      <label for="vehicle_type" class="col-form-label">Type:</label>
+                    </div>
+                    <div class="col">
+                      <select name="type" id="vehicle_type" class="form-select"  required>
+                          <option selected value="train">Train</option>
+                          <option value="tram">Tram</option>
+                          <option value="bus">Bus</option>
+                          <option value="plane">Plane</option>
+                      </select>
+
+                  </div>
+                    <div class="col">
+                    </div>
+
+                </div>
+
+                <div class="row mb-2 g-3 align-items-center">
+                    <div class="col-sm-2">
+                      <label for="num_vehicles" class="col-form-label">Number of sections:</label>
+                    </div>
+                    <div class="col">
+                        <input type="range" class="form-range" id="sect_num" value="1" min="1" max="10" name="sect_num" onchange="Addrow_updatelabel(this.value, 'sect_num_text' , 'Number of sections: ');" required>
+                    </div>
+                    <div class="col">
+                      <span id="sect_num_text" class="form-text">
+                        Number of sections: 1
+                      </span>
+                    </div>
+                </div>
+
+                <div id="list-of-sections" class="row mb-2 g-3 align-items-center">
+                    <div id="ID_row1" class="row mb-2 g-3 align-items-center vsc">
+                        <div class="col-sm-2">
+                          <label for="edit_role" class="col-form-label">Section:</label>
+                        </div>
+                        <div class="col">
+                          <div class="form-floating" >            
+                              <input id="sect_name" name="sect_name" type="text" class="form-control" required>
+                                <label for="sect_name">Section name:</label>
+                              <div class="invalid-feedback">
+                                Name or describe this section
+                                </div>
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div>
+                            <label for="seats_num" class="form-label" id="seats_num_lbl" >Number of seats:</label>
+                            <!--input type="range" class="form-range" value="1" id="seats_num" min="1" max="30" name="seats_num" onchange="updateLabel(this.value, 'seats_num_lbl', 'Number of seats: ' );" required-->
+                              <input type="number" class="form-control" min="1" value="1" id="seats_num1" name="seats_num1" required>
+                              <div class="invalid-feedback">
+                                Number of seats must be greater then or equal 1.
+                                </div>
+                          </div>
+                        </div>
+                      </div>
+                </div>
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                  <a type="button" class="btn btn-outline-gray" href="{{ url_for('carrier.manage_vehicles_page') }}"><i class="bi bi-door-open"></i> Back to admin panel</a>
+                  <button type="submit" class="btn btn-success" ><i class="bi bi-check-lg"></i> Add vehicle</button>
+              </div>
+
+
+
+            </form>
+
+        </div>
+
+
+    </div>
+
+{% endblock %}
+{% block js %}
+
+<script src="{{ url_for('static', filename='js/add_vehicle.js') }}"></script>
+
+{% endblock %}

@@ -1,0 +1,88 @@
+{
+  "knownTypes": {
+    "jablka": "Jablka",
+    "rajce-cz": "Česká rajčata",
+    "hrusky": "Hrušky",
+    "jablka-gold": "Jablka Golden Delicious",
+    "pomerance": "Pomeranče",
+    "mandarinky": "Mandarinky",
+    "rajce-dov": "Rajčata z dovozu"
+  },
+  "shelves": {
+    "0": {
+      "stock": {
+        "rajce-cz": 283,
+        "jablka-gold": 374
+      },
+      "shelfId": 0
+    },
+    "1": {
+      "stock": {
+        "hrusky": 9,
+        "mandarinky": 417
+      },
+      "shelfId": 1
+    },
+    "2": {
+      "stock": {
+        "hrusky": 209,
+        "rajce-dov": 311
+      },
+      "shelfId": 2
+    },
+    "3": {
+      "stock": {
+        "rajce-cz": 2,
+        "pomerance": 436
+      },
+      "shelfId": 3
+    },
+    "4": {
+      "stock": {
+        "hrusky": 192,
+        "rajce-dov": 88
+      },
+      "shelfId": 4
+    },
+    "5": {
+      "stock": {
+        "jablka": 126,
+        "jablka-gold": 229
+      },
+      "shelfId": 5
+    },
+    "6": {
+      "stock": {
+        "mandarinky": 216,
+        "rajce-dov": 124
+      },
+      "shelfId": 6
+    },
+    "999": {
+      "stock": {
+        "rajce-cz": 50
+      },
+      "shelfId": 999
+    },
+    "7": {
+      "stock": {
+        "rajce-cz": 40,
+        "jablka-gold": 364
+      },
+      "shelfId": 7
+    },
+    "8": {
+      "stock": {
+        "jablka-gold": 67,
+        "pomerance": 310
+      },
+      "shelfId": 8
+    },
+    "9": {
+      "stock": {
+        "jablka": 418
+      },
+      "shelfId": 9
+    }
+  }
+}

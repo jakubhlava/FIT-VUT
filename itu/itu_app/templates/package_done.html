@@ -1,0 +1,42 @@
+{#
+    Pohled po dokončení balíčku
+    Vytvořil: Jan Kleisl (xkleis00)
+#}
+<html>
+<head>
+
+    <title>Anki Reborn</title>
+
+<style>
+    .card {
+        margin: 100px auto auto auto;
+    }
+
+    .card-title {
+        text-align: center;
+    }
+</style>
+
+{% include "snippets/css.html" %}
+</head>
+
+<body>
+
+{% include "snippets/navbar.html" %}
+
+<div class="card" style="width: 25rem;">
+    <div class="card-body">
+      <h5 class="card-title">Dokončili jste tento balíček.</h5>
+      <p class="card-text">V balíčku již nejsou žádné další otázky k zobrazení, které byste ještě neuměli. Balíček můžete začít studovat od začátku.<br> GRATULUJEME!</p>
+      <a href="{{url_for('index.main_page')}}" class="btn btn-primary">Domů</a>
+      <a href="{{url_for('packages.main')}}" class="btn btn-primary">Objevovat nové</a>
+      <a href="{{url_for('question.main', find_code=fc, continue="no")}}" class="btn btn-primary">Studovat znovu</a>
+    </div>
+</div>
+
+
+{% include "snippets/js.html" %}
+
+
+</body>
+</html>

@@ -1,0 +1,24 @@
+{#
+    Kostra šablony
+    Vytvořil: Jakub Hlava (xhlava52)
+#}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Anki Reborn{% endblock %}</title>
+{% include "snippets/css.html" %}
+</head>
+<body>
+{% include "snippets/navbar.html" %}
+{% include "snippets/flash_handler.html" %}
+
+
+{% block content %}
+{% endblock %}
+
+{% include "snippets/js.html" %}
+{% block js %}
+{% endblock %}
+</body>
+</html>

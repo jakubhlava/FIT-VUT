@@ -1,0 +1,196 @@
+#!/bin/sh
+export POSIXLY_CORRECT=yes
+
+# overeni pritomnosti terminalu
+test -t 1
+interminal=$?
+
+ignore=0
+ignoreregex=
+normalize=0
+
+# vytiskne urcity pocet krizku
+printCross(){
+    num=$1
+    i=0
+    output=""
+    while [ $i -lt $num ]; do
+        output=$output"#"
+        i=$(($i+1))
+    done
+    echo $output
+}
+
+# vytiskne normalizovany pocet krizku
+printNormal(){
+    num=$1
+    max=$2
+    if [ $interminal -eq 0 ]; then # kontrola terminálu
+        width=$(tput cols)
+    else
+        width=79
+    fi
+    # width - 13 = sirka - 1 - znamky pred #
+    maxcross=$(($width-13))
+    crosscount=$((num*maxcross/max))
+    while [ $i -lt $crosscount ]; do
+        output=$output"#"
+        i=$(($i+1))
+    done
+    echo $output
+}
+
+# funkce pro bezny nenormalizovany vysutp
+defaultOutput(){
+    echo "  <100 B  : $(printCross $cat100B)"
+    echo "  <1 KiB  : $(printCross $cat1k)"
+    echo "  <10 KiB : $(printCross $cat10k)"
+    echo "  <100 KiB: $(printCross $cat100k)"
+    echo "  <1 MiB  : $(printCross $cat1m)"
+    echo "  <10 MiB : $(printCross $cat10m)"
+    echo "  <100 MiB: $(printCross $cat100m)"
+    echo "  <1 GiB  : $(printCross $cat1g)"
+    echo "  >=1 GiB : $(printCross $catbig)"
+    exit 0
+}
+
+# funkce pro normalizovany vystup
+normalizedOutput(){
+    echo "  <100 B  : $(printNormal $cat100B $max)"
+    echo "  <1 KiB  : $(printNormal $cat1k $max)"
+    echo "  <10 KiB : $(printNormal $cat10k $max)"
+    echo "  <100 KiB: $(printNormal $cat100k $max)"
+    echo "  <1 MiB  : $(printNormal $cat1m $max)"
+    echo "  <10 MiB : $(printNormal $cat10m $max)"
+    echo "  <100 MiB: $(printNormal $cat100m $max)"
+    echo "  <1 GiB  : $(printNormal $cat1g $max)"
+    echo "  >=1 GiB : $(printNormal $catbig $max)"
+    exit 0
+}
+
+# ziskani parametru
+while [ "$1" != "" ]; do
+    case $1 in
+        # parametr pro ignorovani urciteho regexu
+        -i )        ignore=1
+                    shift
+                    if [ "$1" != "" ]; then
+                        ignoreregex=$1
+                    else
+                        echo "Parameter \"-i\" needs argument FILE_ERE!" >&2
+                        exit 1
+                    fi
+                    ;;
+        # normalizace vystupu
+        -n )        normalize=1
+                    ;;
+        # slozka, ve ktere se hleda
+        * )         if [ "$1" != "" ]; then
+						test -d "$1"
+						if [ $? -eq 0 ]; then
+							cd "$1" || {
+                                echo "Cannot cd into '$1'!" >&2
+                                exit 2
+                                }
+						else
+							echo "'$1' is not a directory." >&2
+							exit 1
+						fi
+					fi
+                    ;;
+    esac
+	shift
+done
+
+# overeni, zda mam pravo cteni vsech souboru
+errors="$( { find . -type f -exec wc -c {} \; ; } 2>&1 1>/dev/null)"
+if [ "$errors" != "" ]; then
+    echo "$errors" >&2
+    echo "There were some errors while executing the script. Exiting." >&2
+    exit 2
+fi
+
+# prepinani, zda uzivatel chce ignorovat pomoci regexu
+if [ $ignore -eq 0 ]; then
+    dircount=$(find . -type d -exec echo 1 \; | grep -ce 1)
+    filecount=0
+    sizes=$(find . -type f -exec wc -c {} \; | awk '{print $1}')
+    for s in $sizes; do # spocitani zjistenych souboru
+        filecount=$((filecount+=1))
+    done
+else
+    # kontrola, zda regex nematchuje aktualni slozku (.)
+    check=$(echo "./" | grep -ve "$ignoreregex")
+    if [ "$check" != "" ]; then
+        dircount=$(find . -type d | grep -Ecve "$ignoreregex" | awk '{print $1}') # vypocet podslozek
+        filecount=0
+        sizes=$(find . -type f -exec wc -c {} \; | awk '{ size = $1; $1 = ""; if ( $0 !~ /'"$ignoreregex"'/ ) print size }') # nacteni velikosti vsech souboru
+        for s in $sizes; do # spocitani zjistenych souboru
+            filecount=$((filecount+=1))
+        done
+    else 
+        echo "FILE_ERE cannot match working directory because it would ignore all files and subfolders" >&2 
+        exit 1
+    fi
+fi
+
+# sada promennych pro kategorizovani souboru podle velikosti
+cat100B=0
+cat1k=0
+cat10k=0
+cat100k=0
+cat1m=0
+cat10m=0
+cat100m=0
+cat1g=0
+catbig=0
+
+# vypocet poctu souboru v kategoriich
+for size in $sizes; do
+    if [ $size -ge 1073741824 ]; then
+        catbig=$(($catbig+1))
+    elif [ $size -gt 104857600 ]; then
+        cat1g=$(($cat1g+1))
+    elif [ $size -gt 10485760 ]; then
+        cat100m=$((cat100m+1))
+    elif [ $size -gt 1048576 ]; then
+        cat10m=$((cat10m+1))
+    elif [ $size -gt 102400 ]; then
+        cat1m=$((cat1m+1))
+    elif [ $size -gt 10240 ]; then
+        cat100k=$((cat100k+1))
+    elif [ $size -gt 1024 ]; then
+        cat10k=$((cat10k+1))
+    elif [ $size -gt 100 ]; then
+        cat1k=$((cat1k+1))
+    else
+        cat100B=$((cat100B+1))
+    fi
+done
+
+# tisk reportu
+echo "Root directory: $PWD"
+echo "Directories: $dircount"
+echo "All files: $filecount"
+echo "File size histogram:"
+if [ $normalize -eq 0 ]; then
+    defaultOutput
+else
+    vals="$cat100B $cat1k $cat10k $cat100k $cat1m $cat10m $cat100m $cat1g $catbig"
+    max=$((0))
+    for i in $vals
+    do
+    if [ $i -gt $max ]; then 
+        max=$i
+    fi
+    done
+    width=$(tput cols)
+    maxcross=$(($width-13))
+    if [ $maxcross -le $max ]; then # overeni, zda je potreba normalizovat nebo se graf vejde na obrazovku
+        normalizedOutput
+    else
+        defaultOutput
+    fi
+fi
+
+

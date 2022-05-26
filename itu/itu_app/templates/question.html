@@ -1,0 +1,171 @@
+{#
+    Pohled s otázkami
+    Vytvořil: Jan Kleisl (xkleis00)
+#}
+<html>
+<head>
+
+    <title>Anki Reborn</title>
+
+<style>
+    .card {
+        border-radius: 15px 50px !important;
+        margin: 80px auto auto auto;
+    }
+
+    .question {
+        text-align: center;
+    }
+
+    .question2 {
+        text-align: center;
+        margin: auto auto 30px auto !important;
+    }
+
+    button {
+        padding: 10px 20px;
+        border-radius: 10px !important;
+        margin:10px;
+        background-color: #444;
+        color: white;
+        transition-duration: 0.2s;
+        width: 150px;
+        text-align: center;
+    }
+
+    .center_buttons {
+        padding: 40px;
+        margin: 0;
+        position: absolute;
+        left: 50%;
+        -ms-transform: translateX(-50%);
+        transform: translateX(-50%);
+    }
+
+    .container_padding {
+        margin: 120px auto auto auto;
+    }
+
+    .bottom-right {
+        position: absolute;
+        top: 80%;
+        right: 0%;
+    }
+      
+    .wrapper {
+        position: absolute;
+        right: 0px; top: 145px;
+        padding: 20px;
+        min-width: 300px;
+        max-width: 400px;
+        max-height: 800px;
+
+    }
+    
+    ::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #333; 
+    }
+    
+    ::-webkit-scrollbar-thumb {
+        background: #555; 
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #444; 
+    }
+
+    @media only screen and (max-width: 1648px) {
+        #sidebar {
+            display: none;
+        }
+    }
+    
+</style>
+
+{% include "snippets/css.html" %}
+</head>
+
+<body>
+
+{% include "snippets/navbar.html" %}
+
+<div class="card" style="min-width: 23rem; max-width: 55rem;" onclick="otoc()">
+    <div class="card-body">
+      <h5 class="question text-muted pt-2">Otázka:</h5>
+        <hr class="mb-4">
+        <h4 class="question2 card-text">{{q_a["question"] | safe}}</h4>
+        <p class="question text-muted"><small><i>Pro otočení zmáčkni [ENTER] nebo klikni na kartičku</i></small></p>
+        <div>
+            {% if lf == 1 %}
+                <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill bg-danger">
+                    Poslední otázka
+                </span>
+            {% endif %}
+        </div>
+    </div>
+    
+  </div>
+
+<div class="center_buttons">
+    <a href="{{ url_for('question.umim', find_code=fc, qid=q_a["_id"]) }}"><button class="btn btn-success align-content-between justify-content-between" accesskey="a">Umím</button></a> 
+    <a href="{{ url_for('question.neumim', find_code=fc, qid=q_a["_id"]) }}"><button class="btn btn-danger align-content-between justify-content-between" accesskey="l">Neumím</button></a> 
+</div>
+
+<div class="container_padding">
+    <div class="container mt-3" style="width: 350px;">
+        <div class="progress">
+            <div class="progress-bar bg-info" style="width:{{dp}}%"></div>
+        </div>
+    </div>
+</div>
+
+    <div class="wrapper" id="sidebar">
+        <div class="card p-2 my-2">
+            <div class="card-body">
+                <h6 class="card-title">Otázky v balíčku</h6>
+                <div class="list-group infinite-scroll" id="sideQuestions" style="max-height: 261px; overflow-y: scroll;">
+                    {% for q in deck['questions'] %}
+                        <a href="{{ url_for('question.select', find_code=fc, qid=q_a["_id"], selected_q=q["_id"])}}" class="list-group-item list-group item action sidequestion" id="qlink{{ q._id }}"><span class="sq-number">{{ loop.index }}</span>: <span id="qshort{{ q._id }}">{{ q.question }}</span></a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% include "snippets/js.html" %}
+
+<script>
+    let question = `{{q_a["question"] | safe}}`;
+    let answer = `{{q_a["answer"] | safe}}`;
+    let state = "question";
+function otoc() {
+    const element = $("h4");
+    const element2 = $("h5");
+    
+    if (state === "question") {
+        element.html(answer);
+        element2.text("Odpověď:");
+        state = "answer";
+    } else if (state === "answer") {
+        element.html(question);
+        element2.text("Otázka:");
+        state = "question";
+    }
+    
+}  
+
+$(document).on('keypress', (e) => {
+  if (e.keyCode === 13) {
+    otoc();
+  }
+});
+
+</script>
+
+
+</body>
+</html>

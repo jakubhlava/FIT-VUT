@@ -1,0 +1,21 @@
+Projekt 2 do předmětu IPK, varianza ZETA: Sniffer paketů
+Síťový analyzátor v C++, schopný zachytávat a filtrovat pakety na síťovám rozhraní
+
+Známá rozšíření a omezení nejsou žádná.
+Změny oproti zadání: při zachycení ARP rámce jsou IP adresy nahrazeny MAC adresami zdroje i cíle
+
+Volání programu odpovídá zadání, příklad spuštění s filtrací TCP paketů na rozhraní eth0:
+
+sudo ./ipk-sniffer -i eth0 -t
+2021-04-22T12:46:20.912+02:00 172.29.208.1 : 29757 > 172.29.221.67 : 3333, length 54 bytes
+
+0x0000:  00 15 5d d6 e0 7e 00 15  5d c0 39 bf 08 00 45 00   ..]..~.. ].9...E.
+0x0010:  00 28 b1 f5 00 00 40 06  c3 5a ac 1d d0 01 ac 1d   .(....@. .Z......
+0x0020:  dd 43 74 3d 0d 05 d7                               .Ct=...
+
+Odevzdané soubory:
+main.cpp
+main.hpp
+Makefile
+manual.pdf
+README

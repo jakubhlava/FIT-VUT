@@ -1,0 +1,108 @@
+{#
+    Úvodní stránka
+    Vytvořil: Jan Kleisl (xkleis00)
+#}
+{% extends "base.html" %}
+{% block content %}
+<div class="container-fluid">
+        
+    <div class="row my-2">   
+        <div class="title" style="color:rgba(0, 188, 140, 255);">
+            <h2>Oblíbené</h2>
+        </div>
+    </div> 
+        
+    <div class="row">
+        
+        {% if favs is not none %}
+            {% for fav in favs %}
+            
+                <div class="col-md-3 p-3" style="min-width: 26rem; max-width: 32rem;">
+                    <div class="card text-center w-100 p-4 border-success" style="min-width: 25rem; max-width: 35rem; min-height: 15rem; max-height: 17rem; border-radius: 15px 50px;" >
+                        <div class="card-body">
+                            <h3 class="card-title"> {{ fav["name"] }} </h3>
+                            <p class="card-subtitle p-2" style="color: rgb(95, 95, 95);">{{ fav["find_code"] }} </p>
+                        </div>
+
+                        <div class="card-footer bg-dark">                         
+                         
+                           <!-- <a class="btn btn-primary btn-lg" role="button" data-bs-toggle="dropdown"><span class="material-icons">play_arrow</span></a>
+                            <ul class="dropdown-menu">  
+                                <li>
+                                    <a class="dropdown-item" href="{{url_for('question.main', find_code=fav['find_code'], continue='no')}}">Začít</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{{url_for('question.main', find_code=fav['find_code'], continue='yes')}}">Pokračovat</a> 
+                                </li>
+                            </ul>-->
+                            <a class="btn btn-primary btn-lg" href="{{url_for("question.main", find_code=fav["find_code"], continue="no")}}" role="button">Začít</a>
+                            <a class="btn btn-primary btn-lg" href="{{url_for("question.main", find_code=fav["find_code"], continue="yes")}}" role="button">Pokračovat</a>
+                        
+                        {% if fav['my_deck'] == "yes" %}
+                            
+                            <a href="{{url_for("builder.edit", find_code=fav['find_code'])}}" class="btn btn-primary btn-lg"><span class="material-icons">edit</span></a>
+
+                        {% endif %}
+
+                        <a href="{{url_for("index.main_page", find_code=fav['_id'], code=1)}}" class="btn btn-primary btn-lg"><span class="material-icons">favorite</span></a>
+                       
+
+                    </div>
+                    </div>
+                </div> 
+                
+
+            {% endfor %} 
+            
+        {% else %}
+
+        <div class="col-md-3 p-3" style="min-width: 26rem; max-width: 32rem;">
+            <div class="card text-center w-100 p-4 border-success" style="min-width: 25rem; max-width: 35rem; min-height: 15rem; max-height: 17rem; border-radius: 15px 50px;" >
+                <div class="card-body">
+                    <h4 >Nemáš žádné oblíbené balíčky</h4>
+                    <a class="btn btn-lg" href="{{url_for("packages.main")}}" role="button">
+                        <span class="material-icons" style="font-size: 80px;" type="submit" onclick="{{url_for("packages.main")}}">add_circle_outline</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        {% endif %}    
+    </div>
+
+    {% if recent is not none %}     
+        
+        <div class="row py-2 my-2"> 
+            <div class="title" style="color:rgba(242,155,18,255);">
+                <h2>Naposled použité</h2>
+            </div>
+        </div>
+        
+        <div class="row">
+            {% for rec in recent %}
+            <div class="col-md-3 p-3" style="min-width: 26rem; max-width: 32rem;">
+                <div class="card text-center w-100 p-4 border-warning" style="min-width: 25rem; max-width: 35rem; min-height: 15rem; max-height: 17rem; border-radius: 15px 50px;" >
+                        <div class="card-body">
+                            <h3 class="card-title">
+                                {{ rec["name"] }}
+                            </h3>
+                            <p class="card-subtitle p-2" style="color: rgb(95, 95, 95);">
+                                {{ rec["find_code"] }}
+                            </p>
+                         </div>
+
+                         <div class="card-footer bg-dark">                         
+                         
+                            <a class="btn btn-primary btn-lg" href="{{url_for("question.main", find_code=rec["find_code"], continue="no")}}" role="button">Začít</a>
+                            <a class="btn btn-primary btn-lg" href="{{url_for("question.main", find_code=rec["find_code"], continue="yes")}}" role="button">Pokračovat</a> 
+                        
+                        
+                
+
+                    </div>
+                    </div>
+                </div>
+            {% endfor %} 
+        </div>
+    {% endif %}
+{% endblock %}

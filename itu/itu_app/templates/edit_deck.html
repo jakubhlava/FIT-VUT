@@ -1,0 +1,113 @@
+{#
+    Editor balíčků
+    Vytvořil: Jakub Hlava (xhlava52)
+#}
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <div class="row py-2 my-2">
+        <div class="col-12 col-lg-3 order-lg-2">
+            <div class="card p-2 mb-2">
+                <div class="card-body">
+                    <h5 class="card-title">Upravovaný balíček</h5>
+                    <div>
+                        <div class="my-2">
+                            <div class="fw-bold fs-6">Název</div>
+                            <input type="text" class="form-control bg-secondary text-light" id="pkgEditName" value="{{ deck.name }}">
+                        </div>
+                        <div class="my-2">
+                            <div class="fw-bold fs-6">Popis</div>
+                            <textarea type="text" rows="6" class="form-control bg-secondary text-light" id="pkgEditDesc">{{ deck.description }}</textarea>
+                        </div>
+                        <div class="my-2">
+                            <div class="fw-bold fs-6">Kód pro sdílení</div>
+                            <span id="pkgCode">{{ deck.find_code }}</span>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 p-2" id="saveInfo">
+                                <button class="btn btn-outline-success d-inline-flex align-content-between justify-content-between w-100" id="editInfo" onclick="saveInfo()">
+                                <span class="material-icons mr-2">save</span> Uložit informace
+                                </button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 p-2">
+                                <button class="btn btn-outline-success d-inline-flex align-content-between justify-content-between w-100" onclick="save()">
+                                <span class="material-icons mr-2">save</span> Uložit otázky
+                            </button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 p-2">
+                                <button class="btn btn-outline-danger d-inline-flex align-content-between justify-content-between w-100" onclick="confirmDeletion()">
+                                <span class="material-icons mr-2">delete_forever</span> Smazat balíček
+                            </button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="card p-2 my-2">
+                <div class="card-body">
+                    <h5 class="card-title">Přehled otázek</h5>
+                        <div class="list-group" id="sideQuestions">
+                            {% for q in deck['questions'] %}
+                                <a href="#q{{ q._id }}" class="list-group-item list-group item action sidequestion" id="qlink{{ q._id }}"><span class="sq-number">{{ loop.index }}</span>: <span id="qshort{{ q._id }}">{{ q.question }}</span></a>
+                            {% endfor %}
+                        </div>
+                    </div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-9 order-lg-1">
+            <div class="card p-2">
+                <div class="card-body">
+                    <h5 class="card-title">Karty v balíčku</h5>
+                    <div id="cardList">
+                        {% for q in deck['questions'] %}
+                            <div class="my-2 p-4 rounded-3 shadow">
+                                <div class="d-none justify-content-between align-items-center" id="undo{{ q._id }}">
+                                    <span class="text-muted">Odstraněná otázka</span><button class="btn btn-sm btn-outline-secondary" onclick="restoreQuestion({{ q._id }})">Obnovit</button>
+                                </div>
+                                <div id="question{{ q._id }}" class="question" data-question-order="{{ q._id }}">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                    <div class="fs-6 fw-bold question-header">Otázka {{ loop.index }}</div>
+                                    <button class="btn btn-sm btn-outline-danger" onclick="deleteQuestion({{ q._id }})">
+                                        <span class="material-icons">delete_forever</span>
+                                    </button>
+                                </div>
+                                <div class="row my-2 mx-2">
+                                    <label for="q{{ q._id }}" class="form-label col-12 col-lg-2">Otázka</label>
+                                    <input type="text" class="form-control col bg-secondary text-light qinput" id="q{{ q._id }}" value="{{ q.question }}">
+                                </div>
+                                <div class="row mx-2">
+                                    <label for="a{{ q._id }}" class="form-label col-12 col-lg-2">Odpověď</label>
+                                    <textarea rows="3" class="form-control col bg-secondary text-light" id="a{{ q._id }}">{{ q.answer | replace("<br>", "\n") }}</textarea>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class="d-flex justify-content-center mt-4">
+                        <button class="btn btn-outline-success w-25 d-inline-flex align-content-center justify-content-center" onclick="createQuestion()">
+                            <span class="material-icons">add_circle_outline</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block js %}
+    <script>
+        let question_counter = {{ deck.top_id }}+1;
+        let question_indexer = {{ last }};
+        let saving_endpoint = "{{ url_for('builder.save', find_code=deck.find_code) }}"
+        let deletion_endpoint = "{{ url_for('builder.delete', find_code=deck.find_code) }}"
+        let edit_info_endpoint = "{{ url_for('builder.edit_info', find_code=deck.find_code) }}"
+    </script>
+    <script src="{{ url_for('static', filename='js/decks.js') }}"></script>
+{% endblock %}

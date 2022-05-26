@@ -1,0 +1,190 @@
+{% extends 'base.html' %}
+{% block title %}Search Connection{% endblock %}
+
+{% block navbar_right %}
+    <ul class="navbar-nav">
+        {% include 'snippets/user.html' %}
+    </ul>
+{% endblock %}
+{% block content %}
+    <div id="indexContent" class="container mt-5 pt-1 justify-content-center shadow-lg rounded" data-land_names='{{ land_names|tojson }}' data-air_names='{{ air_names|tojson }}'>
+        <div class="mt-1 mb-3">
+            <ul class="nav nav-tabs nav-justified px-5" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-pressed="true" data-bs-toggle="tab" href="#land"><p class="h4 font-weight-normal text-secondary">Land</p></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="tab" href="#air"><p class="h4 font-weight-normal text-secondary">Air</p></a>
+                </li>
+            </ul>
+        </div>
+            
+        <div class="tab-content">
+            <div class="tab-pane active" aria-pressed="true" id="land">
+                <form method="POST" action="{{ url_for('main_page.main_page') }}">
+                    <div class="row justify-content-center align-items-center py-3">
+                        <div class="col">
+                            <div class="form-floating">
+                                <input id="from-bar" name="from-bar" type="search" class="form-control" required>
+                                <label for="from-bar">From:</label>
+                            </div>
+                        </div>
+                        
+                        <div class="col-1 text-center">
+                            <button onclick="swap('from-bar', 'to-bar')" type="button" class="btn btn-primary"><i class="bi bi-arrow-left-right"></i></button>
+                        </div>
+                        
+                        <div class="col">
+                            <div class="form-floating">
+                                <input id="to-bar" name="to-bar" type="search" class="form-control" required>
+                                <label for="to-bar">To:</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row justify-content-center align-items-center py-3">
+                        <div class="col">
+                            <div class="form-floating">
+                                <input id="date-bar" name="date-bar" type="date" class="form-control" value="{{cdate}}" required>
+                                <label for="date-bar">Date:</label>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-floating">
+                                <input id="time-bar" name="time-bar" type="time" class="form-control" value="{{strftime("%H:%M", localtime())}}" required>
+                                <label for="time-bar">Time:</label>
+                            </div>
+                        </div>
+                        <div class="col-1">
+                            <div class="form-floating">
+                                <input id="quantity" type="number" class="form-control" name="quantity" min="1" max="8" value="1">
+                                <label for="quantity">Quantity:</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row justify-content-center align-items-center py-3">
+                        <div class="col text-center">
+                            <button type="submit" id="search-btn" name="search-btn" value="search-btn" class="btn btn-primary px-5 py-3">Search</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="tab-pane" id="air">
+                <form method="POST" action="{{ url_for('main_page.main_page') }}">
+                    <div class="row justify-content-center align-items-center py-3">
+                        <div class="col">
+                            <div class="form-floating">
+                                <input id="from-bar2" name="from-bar2" type="search" class="form-control" required>
+                                <label for="from-bar2">From:</label>
+                            </div>
+                        </div>
+                        
+                        <div class="col-1 text-center">
+                            <button onclick="swap('from-bar2', 'to-bar2')" type="button" class="btn btn-primary"><i class="bi bi-arrow-left-right"></i></button>
+                        </div>
+                        
+                        <div class="col">
+                            <div class="form-floating">
+                                <input id="to-bar2" name="to-bar2" type="search" class="form-control" required>
+                                <label for="to-bar2">To:</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row justify-content-center align-items-center py-3">
+                        <div class="col">
+                            <div class="form-floating">
+                                <input id="date-bar2" name="date-bar2" type="date" class="form-control" value="{{cdate}}" required>
+                                <label for="date-bar">Date:</label>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-floating">
+                                <input id="time-bar2" name="time-bar2" type="time" class="form-control" value="{{strftime("%H:%M", localtime())}}" required>
+                                <label for="time-bar">Time:</label>
+                            </div>
+                        </div>
+                        <div class="col-1">
+                            <div class="form-floating">
+                                <input id="quantity2" type="number" class="form-control" name="quantity2" min="1" max="8" value="1">
+                                <label for="quantity">Quantity:</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row justify-content-center align-items-center py-3">
+                        <div class="col text-center">
+                            <button type="submit" id="search-btn2" name="search-btn2" value="search-btn2" class="btn btn-primary px-5 py-3">Search</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+        {% if not connection_list and find %}
+            <div class="container mt-5 py-2 justify-content-center align-content-center shadow-lg rounded">
+                <div class="fs-3 d-flex justify-content-center align-content-center p-2">We could not find any connections for this search :(</div>
+            </div>
+        {% endif %}
+        {% for connection in connection_list %}
+            <div class="container mt-5 py-2 justify-content-center shadow-lg rounded">
+                <div class="accordion" id="accordionPanelsStayOpenExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="panelsStayOpen-heading{{connection.connection_id}}">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse{{connection.connection_id}}" aria-expanded="true" aria-controls="panelsStayOpen-collapse{{connection.connection_id}}">
+                                {% for tstop in connection.stops %}
+                                    {% if tstop.stop_id == frm_stop.stop_id %}
+                                        <span class=""><div><span class="fs-4 pe-5">{{ tstop.departure }}</span> <span class="fst-italic">{{ dateusr }}</span></div> <span class="">Price: <span class="fw-bold">{{price(connection, frm_stop, to_stop, quantity)}},-</span> Czk</span></span>
+                                    {% endif %}
+                                {% endfor %}
+                            </button>
+                        </h2>
+                        <div id="panelsStayOpen-collapse{{connection.connection_id}}" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-heading{{connection.connection_id}}">
+                            <div class="accordion-body">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        {% set vars = {'inside': False} %}
+                                        {% for tstop in connection.stops %}
+                                            <div class="justify-content-center align-items-center">
+                                                {% if tstop.stop_id == frm_stop.stop_id %}
+                                                    {% if vars.update({'inside': True}) %}{% endif %}
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-circle-half rotate270" viewBox="0 0 16 16">
+                                                        <path d="M8 15A7 7 0 1 0 8 1v14zm0 1A8 8 0 1 1 8 0a8 8 0 0 1 0 16z"/>
+                                                    </svg>
+                                                {% elif tstop.stop_id == to_stop.stop_id %}
+                                                    {% if vars.update({'inside': False}) %}{% endif %}
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-circle-half rotate90" viewBox="0 0 16 16">
+                                                        <path d="M8 15A7 7 0 1 0 8 1v14zm0 1A8 8 0 1 1 8 0a8 8 0 0 1 0 16z"/>
+                                                    </svg>
+                                                {% elif vars.inside %}
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-circle-fill" viewBox="0 0 16 16">
+                                                        <circle cx="8" cy="8" r="8"/>
+                                                    </svg>
+                                                {% else %}
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-circle" viewBox="0 0 16 16">
+                                                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                                    </svg>
+                                                {% endif %}
+
+                                                <span{% if tstop.stop_id in (frm_stop.stop_id, to_stop.stop_id) %} class="fw-bold"{% endif %}>
+                                                    {{ tstop.static_stop.name }} - {{tstop.departure}}</span><br>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="row justify-content-end align-items-end">
+                                        <div class="col text-end">
+                                            <a type="button" href="{{ url_for('reservation.reservation_page', connection_id=connection.connection_id, quantity=quantity, frm_stop_id=frm_stop.stop_id, to_stop_id=to_stop.stop_id, datetime=datetime) }}" id="buy-btn{{connection.connection_id}}" name="buy-btn{{connection.connection_id}}" value="buy-btn{{connection.connection_id}}" class="btn btn-primary px-4 py-2">Buy</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
+
+{% endblock %}

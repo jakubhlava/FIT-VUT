@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% block title %}{% endblock %}
+
+{% block navbar_right %}
+<ul class="navbar-nav">
+  <li class="nav-item">
+    <ul class="navbar-nav">
+      <span class="navbar-text me-2">Hello,
+        {% if current_user.full_name %}
+        {{ current_user.full_name }}!
+        {% else %}
+        user {{ current_user.username }}!
+        {% endif %}
+      </span>
+
+      <li class="nav-item"><a href="/" class="nav-link"><i class="bi bi-search"></i>Search Connections</a></li>
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{{ url_for('main_page.logout') }}"><i class="bi bi-door-open"></i>Logout</a>
+  </li>
+</ul>
+
+{% endblock %}
+
+{% block content %}
+<div class="container mt-n5">
+  <div class="row">
+    <div class="col">
+      <nav
+        class="nav nav-tabs flex-column flex-md-row shadow-sm border-soft justify-content-around bg-white rounded mb-3 py-3"
+        id="nav-tab" role="tablist">
+        <a class="nav-item nav-link" id="nav-manage-users-tab" data-toggle="tab"
+          href="{{ url_for('admin.manage_users_page', page=1) }}" role="tab">
+          Manage Users
+        </a>
+        <a class="nav-item nav-link" id="nav-approve/reject-stops-tab" data-toggle="tab"
+          href="{{ url_for('admin.approve_reject_stops_page', page=1) }}" role="tab">
+          Approve/Reject Stops
+        </a>
+
+        <div class="dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            As Carrier
+          </a>
+
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <li><a class="dropdown-item nav-item nav-link"
+                href="{{ url_for('carrier.manage_connections_page') }}">Manage Connections</a></li>
+            <li><a class="dropdown-item nav-item nav-link" href="{{ url_for('carrier.manage_stops_page') }}">Manage
+                Stops</a></li>
+            <li><a class="dropdown-item nav-item nav-link" href="{{ url_for('carrier.manage_vehicles_page') }}">Manage
+                Vehicles</a></li>
+            <li><a class="dropdown-item nav-item nav-link" href="{{ url_for('carrier.manage_personnel_page') }}">Manage
+                Personnel Accounts</a></li>
+          </ul>
+        </div>
+
+        <div class="dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            As Personnel
+          </a>
+
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <li><a class="dropdown-item nav-item nav-link" href="{{ url_for('personnel.update_position_page') }}">Update
+                Vehicle
+                Position</a></li>
+            <li><a class="dropdown-item nav-item nav-link"
+                href="{{ url_for('personnel.manage_reservations_page') }}">Manage Reservations</a></li>
+            
+          </ul>
+        </div>
+
+      </nav>
+
+      <div class="tab-content" id="nav-tabContent">
+        {% block tab_content %}
+        {% endblock %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

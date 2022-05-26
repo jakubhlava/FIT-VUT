@@ -1,0 +1,83 @@
+﻿<UserControl x:Class="RideSharing.App.Views.RideCreateEditView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:RideSharing.App.Views"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:viewModels="clr-namespace:RideSharing.App.ViewModels"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             d:DataContext="{d:DesignInstance viewModels:RideCreateEditViewModel}">
+    <Border Padding="10">
+        <StackPanel>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <TextBlock FontWeight="Bold" Grid.Row="0" Grid.Column="0" Margin="10" Text="Odjezd" FontSize="32" FontFamily="Bold" HorizontalAlignment="Center"></TextBlock>
+                <TextBlock FontWeight="Bold" Grid.Row="0" Grid.Column="1" Margin="10" Text="Příjezd" FontSize="32" FontFamily="Bold" HorizontalAlignment="Center"></TextBlock>
+                <StackPanel Grid.Row="1" Grid.Column="0" Margin="10">
+                    <Label FontWeight="Bold" FontSize="24" Foreground="Black">Datum a čas</Label>
+                    <xctk:DateTimePicker Background="Gray" FontSize="18" Value="{Binding Ride.DepartureTime}" Height="35" ShowButtonSpinner="False"></xctk:DateTimePicker>
+                    <Label FontWeight="Bold" FontSize="24" Foreground="Black">Město</Label>
+                    <TextBox Text="{Binding Ride.CityFrom}" Height="35" Foreground="Black" FontSize="25">
+                        <TextBox.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="CornerRadius" Value="5"/>
+                            </Style>
+                        </TextBox.Resources>
+                    </TextBox>
+                </StackPanel>
+                <StackPanel Grid.Row="1" Grid.Column="1" Margin="10">
+                    <Label FontWeight="Bold" FontSize="24" Foreground="Black">Datum a čas</Label>
+                    <xctk:DateTimePicker Background="Gray" FontSize="18" Value="{Binding Ride.ArrivalTime}" Height="35" ShowButtonSpinner="False"></xctk:DateTimePicker>
+                    <Label FontWeight="Bold" FontSize="24" Foreground="Black">Město</Label>
+                    <TextBox Foreground="Black" FontSize="25" Text="{Binding Ride.CityTo}" Height="35">
+                        <TextBox.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="CornerRadius" Value="5"/>
+                            </Style>
+                        </TextBox.Resources>
+                    </TextBox>
+                </StackPanel>
+            </Grid>
+            <StackPanel Margin="10">
+                <Label FontWeight="Bold" FontSize="24" Foreground="Black">Auto</Label>
+                <ComboBox Height="35" ItemsSource="{Binding User.OwnedCars}" SelectedItem="{Binding SelectedCar}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding Brand}" Margin="0 0 5 0"></TextBlock>
+                                <TextBlock Text="{Binding Model}" Margin="0 0 5 0"></TextBlock>
+                                <TextBlock Text="{Binding SeatsCount, StringFormat={}{0} sedadel}" Margin="0 0 5 0"></TextBlock>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+                <Label FontWeight="Bold" FontSize="24" Foreground="Black">Další informace</Label>
+                <TextBox Foreground="Black" FontSize="25" TextWrapping="Wrap" AcceptsReturn="True" VerticalContentAlignment="Stretch" AcceptsTab="True" Height="180" Text="{Binding Ride.Note}">
+                    <TextBox.Resources>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="CornerRadius" Value="5"/>
+                        </Style>
+                    </TextBox.Resources>
+                </TextBox>
+                <Button Width="120" Margin="0 10" FontWeight="Bold" HorizontalAlignment="Right" FontSize="32" Foreground="Orange" Command="{Binding SaveRideCommand}" Background="DimGray">
+                    Uložit
+                    <Button.Resources>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="CornerRadius" Value="5"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+            </StackPanel>
+
+        </StackPanel>
+    </Border>
+</UserControl>
